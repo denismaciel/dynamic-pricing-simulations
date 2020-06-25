@@ -1,0 +1,16 @@
+site_name: Dynamic Pricing Simulations
+theme:
+  name: "material"
+  palette:
+    primary: "blue"
+    accent: "indigo"
+nav:
+  - Intro: intro.md
+  - Notebook: notebooks/nb_greedy_vs_thompson.md
+  - Notebook2: notebooks/greedy_vs_thomp.md
+markdown_extensions:
+  - admonition
+  - codehilite:
+      guess_lang: false
+  - toc:
+      permalink: true
