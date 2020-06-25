@@ -9,4 +9,5 @@ nb-sync-notebooks:
 	./scripts/compile_notebooks.py sync_notebooks
 
 nb-make-markdown:
+	rm -rf docs/notebooks/*
 	./scripts/compile_notebooks.py make_markdown
