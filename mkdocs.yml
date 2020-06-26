@@ -1,16 +1,16 @@
-site_name: Dynamic Pricing Simulations
+site_name: "Dynamic Pricing"
 theme:
   name: "material"
   palette:
-    primary: "blue"
-    accent: "indigo"
+    primary: "black"
+  font:
+      text: IBM Plex Sans
+      code: SF Mono
 nav:
-  - Intro: intro.md
-  - Notebook: notebooks/nb_greedy_vs_thompson.md
-  - Notebook2: notebooks/greedy_vs_thomp.md
+  - Simulations:
+    - Greedy vs Thompson Sampling: notebooks/nb_greedy_vs_thompson.md
 markdown_extensions:
-  - admonition
   - codehilite:
-      guess_lang: false
-  - toc:
-      permalink: true
+      guess_lang: true
+repo_name: Source Code
+repo_url: https://github.com/denismaciel/dynamic-pricing-simulations
