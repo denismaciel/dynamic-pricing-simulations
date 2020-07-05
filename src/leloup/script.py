@@ -45,16 +45,12 @@ def retrieve_price_levels():
 
 prices = [pl.price for pl in retrieve_price_levels()]
 profits = [pl.price * pl.true_prob - c for pl in retrieve_price_levels()]
-labels = ['$' + str(p) for p in prices]
 
 plt.plot(prices, profits)
-plt.xticks(prices, labels=labels)
 plt.ylabel("Expected Profit")
 plt.xlabel("Price Level")
 plt.savefig("./figs/expected_profit_vs_price_level.png")
 plt.close()
-
-raise ZeroDivisionError
 
 # 1. Find out which price level PL yields the highest expected profit
 #     a. If two price levels yield the same profit, pick at random between them.
