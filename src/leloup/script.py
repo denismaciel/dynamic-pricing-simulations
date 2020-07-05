@@ -10,6 +10,9 @@ epsilon = 20  # miminal unitary return
 c = 10  # buying cost
 n_stores = 2000  # number of stores
 
+from pathlib import Path
+
+figs_folder = Path().absolute() / "figs" / "leloup"
 
 class BetaParams(NamedTuple):
     """
@@ -48,8 +51,10 @@ profits = [pl.price * pl.true_prob - c for pl in retrieve_price_levels()]
 
 plt.plot(prices, profits)
 plt.ylabel("Expected Profit")
-plt.xlabel("Price Level")
-plt.savefig("./figs/expected_profit_vs_price_level.png")
+plt.xlabel("Price")
+plt.ylim((0, 100))
+plt.xlim((0, 100))
+plt.savefig(figs_folder / "expected_profit_vs_price_level.png")
 plt.close()
 
 # 1. Find out which price level PL yields the highest expected profit
@@ -137,11 +142,11 @@ greedy_result = run_simulation(expected_probability=mean_beta, size=SIZE)
 pp = reshape_simulation_result(greedy_result, size=SIZE)
 pp = pp[:100]
 plt.stackplot(pp.index, pp[50], pp[60], pp[70], pp[80], pp[90], pp[100])
-plt.savefig("./figs/greedy_stackplot.png")
+plt.savefig(figs_folder / "greedy_stackplot.png")
 plt.close()
 
 pp[[50, 60, 70, 80, 90, 100]].plot()
-plt.savefig("./figs/greedy_pp_plot.png")
+plt.savefig(figs_folder / "greedy_pp_plot.png")
 plt.close()
 
 # Thompson sampling
@@ -153,9 +158,9 @@ thompson_result = run_simulation(expected_probability=sampled_beta, size=SIZE)
 pp = reshape_simulation_result(thompson_result, size=SIZE)
 
 plt.stackplot(pp.index, pp[50], pp[60], pp[70], pp[80], pp[90], pp[100])
-plt.savefig("./figs/thompson_stackplot.png")
+plt.savefig(figs_folder / "thompson_stackplot.png")
 plt.close()
 
 pp[[50, 60, 70, 80, 90, 100]].plot()
-plt.savefig("./figs/thompson_pp_plot.png")
+plt.savefig(figs_folder / "thompson_pp_plot.png")
 plt.close()
