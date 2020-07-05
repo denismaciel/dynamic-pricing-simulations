@@ -67,6 +67,7 @@ def plot(d):
     ax.plot(range(1000), [sum(x) / len(x) for x in d[2]])
     ax.plot(range(1000), [sum(x) / len(x) for x in d[1]])
     ax.plot(range(1000), [sum(x) / len(x) for x in d[0]])
+    ax.set_ylim(0, 1)
 
 
 # %%
@@ -101,8 +102,7 @@ r = update_means(params_test, 1, 1)
 assert r[1].mean == 5
 assert r[1].n_realizations == 3
 assert pick_best_mean(params_test) == 1
-
-
+b
 mean_params = (
     MeanParam(0, 0),
     MeanParam(0, 0),
@@ -110,6 +110,49 @@ mean_params = (
 )
 
 d = simulate(pick_best_mean, mean_params, update_means)
+
+# %%
+# %config InlineBackend.figure_format = 'retina'
+
+# %%
+import matplotlib
+matplotlib.rcParams["figure.dpi"] = 100
+plot(d)
+
+
+# %%
+def update_thom(params, idx, result):
+    p = params[idx]
+
+    if result not in (0, 1):
+        raise ValueError("`result` must be either 0 or 1")
+    
+    a = p.a + result
+    b = p.b + (1 - result)
+
+    temp = list(params)
+    temp[idx] = ThomParam(a, b)
+    return tuple(temp)
+
+def pick_best_thom(params):
+    from numpy.random import beta
+    
+    samples = []
+    for p in params:
+        samples.append(beta(p.a, p.b))
+    return samples.index(max(samples))
+
+class ThomParam(NamedTuple):
+    a: int
+    b: int
+        
+thom_params = (
+    ThomParam(1, 1),
+    ThomParam(1, 1),
+    ThomParam(1, 1),
+)
+
+d = simulate(pick_best_thom, thom_params, update_thom)
 plot(d)
 
 
@@ -149,7 +192,9 @@ d = simulate(pick_best_thom, thom_params, update_thom)
 plot(d)
 
 # %%
-[sum(x) / len(x) for x in d[0]][999], [sum(x) / len(x) for x in d[1]][999], [sum(x) / len(x) for x in d[2]][999]
+(
+ [sum(x) / len(x) for x in d[0]][999], 
+ [sum(x) / len(x) for x in d[1]][999], 
+ [sum(x) / len(x) for x in d[2]][999],
+)
 
-
-# %%
