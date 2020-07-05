@@ -41,7 +41,7 @@ nbconvert==5.6.1          # via jupyter, notebook
 nbformat==5.0.7           # via ipywidgets, jupytext, nbconvert, notebook
 nltk==3.5                 # via lunr
 notebook==6.0.3           # via jupyter, widgetsnbextension
-numpy==1.19.0             # via -r requirements.in, matplotlib, pandas
+numpy==1.19.0             # via -r requirements.in, matplotlib, pandas, scipy
 packaging==20.4           # via bleach
 pandas==1.0.5             # via -r requirements.in
 pandocfilters==1.4.2      # via nbconvert
@@ -64,6 +64,7 @@ pyzmq==19.0.1             # via jupyter-client, notebook, qtconsole
 qtconsole==4.7.5          # via jupyter
 qtpy==1.9.0               # via qtconsole
 regex==2020.6.8           # via nltk
+scipy==1.5.1              # via -r requirements.in
 send2trash==1.5.0         # via notebook
 six==1.15.0               # via bleach, cycler, jsonschema, livereload, lunr, packaging, pyrsistent, python-dateutil, traitlets
 terminado==0.8.3          # via notebook
