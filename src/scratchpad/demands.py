@@ -30,7 +30,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib as mpl
-
+import matplotlib.pyplot as plt
+plt.style.use('seaborn-deep')
 
 def price_strategy(day: int) -> float:
     return 30 if day <= 50 else 60
@@ -51,8 +52,6 @@ prices = [price_strategy(day) for day in range(100)]
 demands = [demand(p) for p in prices]
 
 # %%
-import matplotlib.pyplot as plt
-
 plt.plot(demands)
 plt.xlabel("Days")
 plt.ylabel("Realized Demand")
@@ -66,7 +65,6 @@ plt.ylabel("Realized Demand")
 
 # %%
 from math import exp, e, factorial, log
-
 
 def mean_demand(p):
     a = 20
@@ -113,6 +111,9 @@ for s in range(100):
 
 results = pd.concat(results)
 
+results[['t', 'price']].plot()
+plt.savefig('price_development_bernoulli_approx.png')
+
 # %%
 
 
@@ -138,10 +139,7 @@ for key, grp in results.groupby("simulation_id"):
 
 ax1.set_ylabel("Price")
 ax2.set_ylabel("Stock")
-
 ax1.set_xlabel("")
-ax1.set_xlabel("")
-# ax1.get_xaxis().set_visible(False)
 ax1.set_xticklabels([])
 fig.tight_layout()
 fig.savefig("dflk.png")
