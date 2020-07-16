@@ -4,28 +4,34 @@
 #
 #    pip-compile
 #
-appdirs==1.4.4            # via ptpython
-attrs==19.3.0             # via jsonschema
+-e file:///home/denis/Code/dynamic-pricing-simulations  # via -r requirements.in
+appdirs==1.4.4            # via black, ptpython
+attrs==19.3.0             # via black, jsonschema, pytest
 backcall==0.2.0           # via ipython
+black==19.10b0            # via -r requirements.in
 bleach==3.1.5             # via nbconvert
-click==7.1.2              # via mkdocs, nltk
+certifi==2020.6.20        # via requests
+chardet==3.0.4            # via requests
+click==7.1.2              # via black, mkdocs, nltk
 cycler==0.10.0            # via matplotlib
 decorator==4.4.2          # via ipython, traitlets
 defusedxml==0.6.0         # via nbconvert
 entrypoints==0.3          # via nbconvert
+flake8==3.8.3             # via -r requirements.in
 future==0.18.2            # via lunr
-ipykernel==5.3.0          # via ipywidgets, jupyter, jupyter-console, notebook, qtconsole
-ipython-genutils==0.2.0   # via nbformat, notebook, qtconsole, traitlets
-ipython==7.15.0           # via ipykernel, ipywidgets, jupyter-console, ptipython
-ipywidgets==7.5.1         # via jupyter
+idna==2.10                # via requests
+ipykernel==5.3.0          # via notebook
+ipython-genutils==0.2.0   # via nbformat, notebook, traitlets
+ipython==7.15.0           # via ipykernel, ptipython
 jedi==0.17.1              # via ipython, ptpython
-jinja2==2.11.2            # via mkdocs, nbconvert, notebook
+jinja2==2.11.2            # via jupyterlab, jupyterlab-server, mkdocs, nbconvert, notebook
 joblib==0.15.1            # via nltk
-jsonschema==3.2.0         # via nbformat
-jupyter-client==6.1.3     # via ipykernel, jupyter-console, notebook, qtconsole
-jupyter-console==6.1.0    # via jupyter
-jupyter-core==4.6.3       # via jupyter-client, nbconvert, nbformat, notebook, qtconsole
-jupyter==1.0.0            # via -r requirements.in
+json5==0.9.5              # via jupyterlab-server
+jsonschema==3.2.0         # via jupyterlab-server, nbformat
+jupyter-client==6.1.3     # via ipykernel, notebook
+jupyter-core==4.6.3       # via jupyter-client, nbconvert, nbformat, notebook
+jupyterlab-server==1.2.0  # via jupyterlab
+jupyterlab==2.1.5         # via -r requirements.in
 jupytext==1.5.0           # via -r requirements.in
 kiwisolver==1.2.0         # via matplotlib
 livereload==2.6.2         # via mkdocs
@@ -33,48 +39,60 @@ lunr[languages]==0.5.8    # via mkdocs
 markdown==3.2.2           # via mkdocs, mkdocs-material, pymdown-extensions
 markupsafe==1.1.1         # via jinja2
 matplotlib==3.2.2         # via -r requirements.in
+mccabe==0.6.1             # via flake8
 mistune==0.8.4            # via nbconvert
 mkdocs-material-extensions==1.0  # via mkdocs-material
 mkdocs-material==5.3.2    # via -r requirements.in, mkdocs-material-extensions
 mkdocs==1.1.2             # via -r requirements.in, mkdocs-material
-nbconvert==5.6.1          # via jupyter, notebook
-nbformat==5.0.7           # via ipywidgets, jupytext, nbconvert, notebook
+more-itertools==8.4.0     # via pytest
+mypy-extensions==0.4.3    # via mypy
+mypy==0.782               # via -r requirements.in
+nbconvert==5.6.1          # via notebook
+nbformat==5.0.7           # via jupytext, nbconvert, notebook
 nltk==3.5                 # via lunr
-notebook==6.0.3           # via jupyter, widgetsnbextension
+notebook==6.0.3           # via jupyterlab, jupyterlab-server
 numpy==1.19.0             # via -r requirements.in, matplotlib, pandas, scipy
-packaging==20.4           # via bleach
+packaging==20.4           # via bleach, pytest
 pandas==1.0.5             # via -r requirements.in
 pandocfilters==1.4.2      # via nbconvert
 parso==0.7.0              # via jedi
+pathspec==0.8.0           # via black
 pexpect==4.8.0            # via ipython
 pickleshare==0.7.5        # via ipython
+pluggy==0.13.1            # via pytest
 prometheus-client==0.8.0  # via notebook
-prompt-toolkit==3.0.5     # via ipython, jupyter-console, ptpython
+prompt-toolkit==3.0.5     # via ipython, ptpython
 ptipython==1.0.1          # via -r requirements.in
 ptpython==3.0.2           # via ptipython
 ptyprocess==0.6.0         # via pexpect, terminado
-pygments==2.6.1           # via ipython, jupyter-console, mkdocs-material, nbconvert, ptpython, qtconsole
+py==1.9.0                 # via pytest
+pycodestyle==2.6.0        # via flake8
+pyflakes==2.2.0           # via flake8
+pygments==2.6.1           # via ipython, mkdocs-material, nbconvert, ptpython
 pymdown-extensions==7.1   # via mkdocs-material
 pyparsing==2.4.7          # via matplotlib, packaging
 pyrsistent==0.16.0        # via jsonschema
+pytest==5.4.3             # via -r requirements.in
 python-dateutil==2.8.1    # via jupyter-client, matplotlib, pandas
 pytz==2020.1              # via pandas
 pyyaml==5.3.1             # via jupytext, mkdocs
-pyzmq==19.0.1             # via jupyter-client, notebook, qtconsole
-qtconsole==4.7.5          # via jupyter
-qtpy==1.9.0               # via qtconsole
-regex==2020.6.8           # via nltk
+pyzmq==19.0.1             # via jupyter-client, notebook
+regex==2020.6.8           # via black, nltk
+requests==2.24.0          # via jupyterlab-server
 scipy==1.5.1              # via -r requirements.in
 send2trash==1.5.0         # via notebook
 six==1.15.0               # via bleach, cycler, jsonschema, livereload, lunr, packaging, pyrsistent, python-dateutil, traitlets
 terminado==0.8.3          # via notebook
 testpath==0.4.4           # via nbconvert
-tornado==6.0.4            # via ipykernel, jupyter-client, livereload, mkdocs, notebook, terminado
+toml==0.10.1              # via black
+tornado==6.0.4            # via ipykernel, jupyter-client, jupyterlab, livereload, mkdocs, notebook, terminado
 tqdm==4.46.1              # via nltk
-traitlets==4.3.3          # via ipykernel, ipython, ipywidgets, jupyter-client, jupyter-core, nbconvert, nbformat, notebook, qtconsole
-wcwidth==0.2.5            # via prompt-toolkit
+traitlets==4.3.3          # via ipykernel, ipython, jupyter-client, jupyter-core, nbconvert, nbformat, notebook
+typed-ast==1.4.1          # via black, mypy
+typing-extensions==3.7.4.2  # via mypy
+urllib3==1.25.9           # via requests
+wcwidth==0.2.5            # via prompt-toolkit, pytest
 webencodings==0.5.1       # via bleach
-widgetsnbextension==3.5.1  # via ipywidgets
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

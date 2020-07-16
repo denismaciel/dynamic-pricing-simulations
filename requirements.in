@@ -1,4 +1,5 @@
-jupyter
+-e .
+jupyterlab
 jupytext
 matplotlib
 mkdocs
@@ -7,3 +8,10 @@ numpy
 pandas
 ptipython
 scipy
+
+# Development
+black
+flake8
+mypy
+pytest
+rope
