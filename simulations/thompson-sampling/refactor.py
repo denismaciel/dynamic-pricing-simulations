@@ -73,10 +73,12 @@ def simulate(
 ):
     simulations = []
     for s in range(S):
+        if s % 100 == 0:
+            print(f"Starting simulation number: {s}")
         beliefs = price_levels()
         timeline = [(t, step(beliefs, prob_estimate)) for t in range(T)]
         simulations.append(timeline)
     return simulations
 
 
-output = simulate(1000, 10000, price_levels, thompson)
+output = simulate(10000, 1000, price_levels, thompson)
