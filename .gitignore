@@ -1,6 +1,8 @@
 *.ipynb
 docs/notebooks
 figs
+.vim
+.python-version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
