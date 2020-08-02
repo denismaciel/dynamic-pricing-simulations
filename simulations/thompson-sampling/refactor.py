@@ -6,7 +6,7 @@ from dynpric.priors import BetaPrior
 
 class PriceLevel(NamedTuple):
     """
-    Container of the information that charcterizes the state of a price level
+    Container of the information that characterizes the state of a price level
     """
 
     price: float
@@ -56,7 +56,7 @@ choose_price(price_levels(), greedy)
 choose_price(price_levels(), true_best)
 
 
-def step(
+def trial(
     beliefs: PriceLevels, prob_estimate: Callable[[PriceLevel], float]
 ) -> float:
     pl = choose_price(beliefs, prob_estimate)
@@ -76,7 +76,7 @@ def simulate(
         if s % 100 == 0:
             print(f"Starting simulation number: {s}")
         beliefs = price_levels()
-        timeline = [(t, step(beliefs, prob_estimate)) for t in range(T)]
+        timeline = [(t, trial(beliefs, prob_estimate)) for t in range(T)]
         simulations.append(timeline)
     return simulations
 
