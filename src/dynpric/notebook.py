@@ -1,3 +1,8 @@
+"""
+Utility functions that help display pieces of source code
+on a Jupyter Notebook.
+"""
+
 import inspect
 from pathlib import Path
 
@@ -23,7 +28,7 @@ def display_source_code(x, method_name=None):
 
 def project_root_dir():
     """
-    The project root directory is considered the first 
+    The project root directory is considered the first
     directory with .git folder in it
     """
     p_origin = p = Path().absolute()
@@ -37,4 +42,3 @@ def project_root_dir():
 
 if __name__ == "__main__":
     print(project_root_dir())
-
