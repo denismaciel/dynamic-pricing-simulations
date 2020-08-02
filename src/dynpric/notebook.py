@@ -1,4 +1,5 @@
 import inspect
+from pathlib import Path
 
 from IPython.display import display, Markdown
 
@@ -20,6 +21,20 @@ def display_source_code(x, method_name=None):
     display_code_block(x)
 
 
+def project_root_dir():
+    """
+    The project root directory is considered the first 
+    directory with .git folder in it
+    """
+    p_origin = p = Path().absolute()
+    while True:
+        if p == Path("/"):
+            raise FileNotFoundError(f"Could not find project root dir from {p_origin}")
+        if p / Path(".git") in p.iterdir():
+            return p.absolute()
+        p = p.parent.absolute()
+
+
 if __name__ == "__main__":
-    ...
+    print(project_root_dir())
 
