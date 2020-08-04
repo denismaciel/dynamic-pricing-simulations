@@ -46,7 +46,7 @@ class BetaPrior(Prior):
         return self.alpha / (self.alpha + self.beta)
 
     def sample(self, n: int = 1) -> float:
-        return np.random.beta(self.alpha, self.beta, size=n) # type: ignore
+        return np.random.beta(self.alpha, self.beta, size=n)  # type: ignore
 
     def update(self, result: int) -> None:
 
@@ -55,3 +55,6 @@ class BetaPrior(Prior):
 
         self.alpha += result
         self.beta += 1 - result
+
+    def __repr__(self):
+        return f"BetaPrior(alpha={self.alpha}, beta={self.beta})"
