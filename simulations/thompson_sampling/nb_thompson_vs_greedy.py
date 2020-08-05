@@ -1,11 +1,31 @@
+# ---
+# jupyter:
+#   jupytext:
+#     cell_metadata_filter: -all
+#     formats: ipynb,py:percent
+#     text_representation:
+#       extension: .py
+#       format_name: percent
+#       format_version: '1.3'
+#       jupytext_version: 1.5.0
+#   kernelspec:
+#     display_name: Python 3
+#     language: python
+#     name: python3
+# ---
+
+# %%
 import random
 from typing import NamedTuple, List, Callable, Dict, Any, Tuple
+
+import pandas as pd
 
 from dynpric.seller import Seller
 from dynpric.market import Market, Price, Quantity
 from dynpric.priors import BetaPrior
 
 
+# %%
 class PriceLevel(NamedTuple):
     """
     Container of the information that characterizes the state of a price level
@@ -15,16 +35,20 @@ class PriceLevel(NamedTuple):
     true_prob: float
 
 
+# %%
 PriceLevels = List[PriceLevel]
 
 
+# %%
 class Belief(NamedTuple):
     price: Price
     prior: BetaPrior
 
 
+# %%
 Beliefs = List[Belief]
 
+# %%
 price_levels = [
     PriceLevel(29.9, 0.6),
     PriceLevel(34.9, 0.4),
@@ -32,6 +56,7 @@ price_levels = [
 ]
 
 
+# %%
 def beliefs() -> Beliefs:
     """
     Reset the state of beliefs when initializing a new simulation trial
@@ -43,14 +68,17 @@ def beliefs() -> Beliefs:
     ]
 
 
+# %%
 def greedy(b: Belief) -> float:
     return b.prior.expected_value  # type: ignore
 
 
+# %%
 def thompson(b: Belief) -> float:
     return b.prior.sample()  # type: ignore
 
 
+# %%
 class ThompsonSeller(Seller):
     def __init__(self, beliefs: Beliefs, strategy: Callable[[Belief], float]) -> None:
         self.beliefs = beliefs
@@ -67,6 +95,7 @@ class ThompsonSeller(Seller):
         belief.prior.update(q)
 
 
+# %%
 class BinomialMarket(Market):
     def __init__(self, price_levels: PriceLevels) -> None:
         self.price_levels = price_levels
@@ -84,6 +113,7 @@ class BinomialMarket(Market):
         return 1
 
 
+# %%
 def simulate(
     S: int,
     T: int,
@@ -112,39 +142,66 @@ def simulate(
     return trials
 
 
-if __name__ == "__main__":
-
-    def thompson_initialize_trial() -> Tuple[Market, Seller]:
-        return (
-            BinomialMarket(price_levels),
-            ThompsonSeller(beliefs(), strategy=thompson),
-        )
-
-    def thompson_record_state(
-        t: int, market: Market, seller: Seller, p: Price, q: Quantity
-    ) -> Dict[str, Any]:
-        return {"t": t, "price": p}
+# %%
+def thompson_initialize_trial() -> Tuple[Market, Seller]:
+    return (
+        BinomialMarket(price_levels),
+        ThompsonSeller(beliefs(), strategy=greedy),
+    )
 
 
-    simulation = simulate(100, 100, thompson_initialize_trial, thompson_record_state)
+def thompson_record_state(
+    t: int, market: Market, seller: Seller, p: Price, q: Quantity
+) -> Dict[str, Any]:
+    return {"t": t, "price": p}
 
-    # Structure of simulation object
-    # [
-    #   {
-    #      "s": 0,
-    #      "periods": [
-    #          {'t': 0, 'price': 29.99},
-    #          {'t': 1, 'price': 34.99},
-    #          ...
-    #      ]
-    #   },
-    #   ...
-    # ]
 
-    import pandas as pd
+simulation = simulate(
+    S=1000,
+    T=1000,
+    initialize_trial=thompson_initialize_trial,
+    record_state=thompson_record_state,
+)
+
+def flatten_results(simulation) -> pd.DataFrame:
+    """
+    Creates a dataframe out of the results of a simulation.
+
+    The expected structure of the simulation object:
+    [
+      {
+         "s": 0,
+         "periods": [
+             {'t': 0, 'price': 29.99},
+             {'t': 1, 'price': 34.99},
+             ...
+         ]
+      },
+      ...
+    ]
+    """
     flat = []
     for trial in simulation:
         for period in trial["periods"]:
             flat.append({"s": trial["s"], **period})
 
-    print(pd.DataFrame(flat))
+    return pd.DataFrame(flat)
+
+results = flatten_results(simulation)
+
+# %%
+counts_per_step = results.groupby(["t", "price"]).size().reset_index(name="n")
+
+counts_per_step["pp"] = counts_per_step["n"] / max(counts_per_step["t"] + 1)
+
+# %%
+from plotnine import ggplot, aes, geom_point, geom_line, labs
+
+plot = (
+    ggplot(counts_per_step, aes("t", "pp", color="factor(price)"))
+    + geom_line()
+    + labs(y="Demos", color="A")
+)
+
+plot
+
