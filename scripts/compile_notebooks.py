@@ -9,8 +9,10 @@ from operator import attrgetter
 home = Path()
 
 def sync_notebooks():
-    targets = (home / "src").rglob("nb_*")
+    targets = (home / "simulations").rglob("nb_*")
     groups = groupby(sorted(targets), lambda x: attrgetter("stem")(x))
+
+    # print("Found notebooks: {}".format(', '.join(str(name) for name, iter_ in groups)))
 
     for stem, files in groups:
         print(f"Processing {stem}")
@@ -19,19 +21,22 @@ def sync_notebooks():
 
         if len(files) == 2:
             notebook, py = files
+            os.system(f"jupytext --sync {notebook.absolute()}")
         else:
             print(f"Skipping {files}")
 
-        os.system(f"jupytext --sync {notebook.absolute()}")
 
-def make_markdown():
-
-    targets = (home / "src").rglob("*.ipynb")
-
+def make_markdown(execute=False):
+    targets = (home / "simulations").rglob("*.ipynb")
     output_dir = home.absolute() / "docs" / "notebooks"
     notebooks = " ".join([str(nb.absolute()) for nb in targets])
-
-    cmd = f"""jupyter nbconvert --output-dir {output_dir} --to markdown {notebooks}"""
+    execute = "--execute" if execute else ""
+    cmd = f"""jupyter nbconvert \
+            {execute} \
+            --ExecutePreprocessor.timeout=180 \
+            --output-dir {output_dir} \
+            --to markdown {notebooks} \
+            """
     print("Running script...")
     print()
     print(cmd)
@@ -42,7 +47,10 @@ if __name__ == "__main__":
     if sys.argv[1] == "sync_notebooks":
         sync_notebooks()
     elif sys.argv[1] == "make_markdown":
-        make_markdown()
+        if sys.argv[2] == "execute":
+            make_markdown(execute=True)
+        else:
+            make_markdown(execute=False)
     else:
         print("Unknown command")
 
