@@ -8,7 +8,7 @@ theme:
       code: SF Mono
 nav:
   - Simulations:
-    - Greedy vs Thompson Sampling: notebooks/nb_greedy_vs_thompson.md
+    - Thompson Sampling: notebooks/nb_thompson_vs_greedy.md
 markdown_extensions:
   - codehilite:
       guess_lang: true
