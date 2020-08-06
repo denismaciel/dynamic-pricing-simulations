@@ -17,15 +17,16 @@
 # %%
 import random
 from typing import NamedTuple, List, Callable, Dict, Any, Tuple
+import time
 
 import pandas as pd
 
 from dynpric.seller import Seller
 from dynpric.market import Market, Price, Quantity
 from dynpric.priors import BetaPrior
+from dynpric.simulation_engine import simulate, trial_factory
 
 
-# %%
 class PriceLevel(NamedTuple):
     """
     Container of the information that characterizes the state of a price level
@@ -35,20 +36,16 @@ class PriceLevel(NamedTuple):
     true_prob: float
 
 
-# %%
 PriceLevels = List[PriceLevel]
 
 
-# %%
 class Belief(NamedTuple):
     price: Price
     prior: BetaPrior
 
 
-# %%
 Beliefs = List[Belief]
 
-# %%
 price_levels = [
     PriceLevel(29.9, 0.6),
     PriceLevel(34.9, 0.4),
@@ -56,7 +53,6 @@ price_levels = [
 ]
 
 
-# %%
 def beliefs() -> Beliefs:
     """
     Reset the state of beliefs when initializing a new simulation trial
@@ -68,17 +64,14 @@ def beliefs() -> Beliefs:
     ]
 
 
-# %%
 def greedy(b: Belief) -> float:
     return b.prior.expected_value  # type: ignore
 
 
-# %%
 def thompson(b: Belief) -> float:
     return b.prior.sample()  # type: ignore
 
 
-# %%
 class ThompsonSeller(Seller):
     def __init__(self, beliefs: Beliefs, strategy: Callable[[Belief], float]) -> None:
         self.beliefs = beliefs
@@ -95,10 +88,14 @@ class ThompsonSeller(Seller):
         belief.prior.update(q)
 
 
-# %%
 class BinomialMarket(Market):
     def __init__(self, price_levels: PriceLevels) -> None:
         self.price_levels = price_levels
+
+    def _simulate_buying_decision(self, price_level: PriceLevel) -> Quantity:
+        if random.random() > price_level.true_prob:
+            return 0
+        return 1
 
     def realize_demand(self, p: Price) -> Quantity:
         for pl in self.price_levels:
@@ -107,63 +104,32 @@ class BinomialMarket(Market):
         else:
             raise ValueError(f"Price {p} is not an allowed price.")
 
-    def _simulate_buying_decision(self, price_level: PriceLevel) -> Quantity:
-        if random.random() > price_level.true_prob:
-            return 0
-        return 1
 
-
-# %%
-def simulate(
-    S: int,
-    T: int,
-    initialize_trial: Callable[[], Tuple[Market, Seller]],
-    record_state: Callable[[int, Market, Seller, Price, Quantity], Dict],
-):
-    """
-    S: number of trials for the simulation
-    T: number of time periods each trial has
-    """
-
-    def run_period(t, market, seller, record_state):
-        p = seller.choose_price()
-        q = market.realize_demand(p)
-        seller.observe_demand(q, p)
-        return record_state(t, market, seller, p, q)
-
-    trials = []
-    for s in range(S):
-        if s % 100 == 0:
-            print(f"Starting trial number {s}")
-        market, seller = initialize_trial()
-        periods = [run_period(t, market, seller, record_state) for t in range(T)]
-        trials.append({"s": s, "periods": periods})
-
-    return trials
-
-
-# %%
-def thompson_initialize_trial() -> Tuple[Market, Seller]:
+def initialize_trial() -> Tuple[Market, Seller]:
     return (
         BinomialMarket(price_levels),
         ThompsonSeller(beliefs(), strategy=greedy),
     )
 
 
-def thompson_record_state(
+def record_state(
     t: int, market: Market, seller: Seller, p: Price, q: Quantity
 ) -> Dict[str, Any]:
     return {"t": t, "price": p}
 
 
+start = time.perf_counter()
+
 simulation = simulate(
-    S=1000,
-    T=1000,
-    initialize_trial=thompson_initialize_trial,
-    record_state=thompson_record_state,
+    S=100, T=100, trial_runner=trial_factory(initialize_trial, record_state),
 )
 
-def flatten_results(simulation) -> pd.DataFrame:
+end = time.perf_counter()
+
+print(f"It took {end - start}")
+
+
+def flatten_results(simulation: List[Dict]) -> pd.DataFrame:
     """
     Creates a dataframe out of the results of a simulation.
 
@@ -187,6 +153,7 @@ def flatten_results(simulation) -> pd.DataFrame:
 
     return pd.DataFrame(flat)
 
+
 results = flatten_results(simulation)
 
 # %%
@@ -195,7 +162,7 @@ counts_per_step = results.groupby(["t", "price"]).size().reset_index(name="n")
 counts_per_step["pp"] = counts_per_step["n"] / max(counts_per_step["t"] + 1)
 
 # %%
-from plotnine import ggplot, aes, geom_point, geom_line, labs
+from plotnine import ggplot, aes, geom_line, labs
 
 plot = (
     ggplot(counts_per_step, aes("t", "pp", color="factor(price)"))
@@ -204,4 +171,3 @@ plot = (
 )
 
 plot
-

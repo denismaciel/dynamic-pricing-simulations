@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, NamedTuple
 
 import numpy as np
+
+
+Price = float
 
 
 class Prior(ABC):
@@ -58,3 +61,8 @@ class BetaPrior(Prior):
 
     def __repr__(self):
         return f"BetaPrior(alpha={self.alpha}, beta={self.beta})"
+
+
+class Belief(NamedTuple):
+    price: Price
+    prior: Prior
