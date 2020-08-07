@@ -72,7 +72,7 @@ def thompson(b: Belief) -> float:
     return b.prior.sample()  # type: ignore
 
 
-class ThompsonSeller(Seller):
+class BinomialSeller(Seller):
     def __init__(self, beliefs: Beliefs, strategy: Callable[[Belief], float]) -> None:
         self.beliefs = beliefs
         self.strategy = strategy
@@ -108,7 +108,7 @@ class BinomialMarket(Market):
 def initialize_trial() -> Tuple[Market, Seller]:
     return (
         BinomialMarket(price_levels),
-        ThompsonSeller(beliefs(), strategy=greedy),
+        BinomialSeller(beliefs(), strategy=greedy),
     )
 
 
@@ -121,7 +121,7 @@ def record_state(
 start = time.perf_counter()
 
 simulation = simulate(
-    S=100, T=100, trial_runner=trial_factory(initialize_trial, record_state),
+    S=100, T=10000, trial_runner=trial_factory(initialize_trial, record_state),
 )
 
 end = time.perf_counter()
