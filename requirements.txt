@@ -4,8 +4,9 @@
 #
 #    pip-compile
 #
--e file:///home/denis/Code/dynamic-pricing-simulations  # via -r requirements.in
+-e file:///Users/denis/Code/dynamic-pricing-simulations  # via -r requirements.in
 appdirs==1.4.4            # via black, ptpython
+appnope==0.1.0            # via ipykernel, ipython
 attrs==19.3.0             # via black, jsonschema, pytest
 backcall==0.2.0           # via ipython
 black==19.10b0            # via -r requirements.in
@@ -79,6 +80,7 @@ pyyaml==5.3.1             # via jupytext, mkdocs
 pyzmq==19.0.1             # via jupyter-client, notebook
 regex==2020.6.8           # via black, nltk
 requests==2.24.0          # via jupyterlab-server
+rope==0.17.0              # via -r requirements.in
 scipy==1.5.1              # via -r requirements.in
 send2trash==1.5.0         # via notebook
 six==1.15.0               # via bleach, cycler, jsonschema, livereload, lunr, packaging, pyrsistent, python-dateutil, traitlets
