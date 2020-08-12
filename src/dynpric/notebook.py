@@ -26,7 +26,7 @@ def display_source_code(x, method_name=None):
     display_code_block(x)
 
 
-def project_root_dir():
+def project_root_dir() -> Path:
     """
     The project root directory is considered the first
     directory with .git folder in it

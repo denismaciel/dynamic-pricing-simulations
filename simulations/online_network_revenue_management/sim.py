@@ -182,5 +182,5 @@ simulation = simulate(
     S=100,
     T=100,
     trial_runner=trial_factory(initialize_trial, record_state),
-    execution_mode="sequential",
+    # execution_mode="sequential",
 )
