@@ -8,6 +8,7 @@ numpy
 pandas
 ptipython
 scipy
+plotnine
 
 # Development
 black
