@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 
 # Package meta-data.
 NAME = "dynpric"
-DESCRIPTION = "Utils for Pricing Pipeline"
+DESCRIPTION = "Tools for Simulating Dynamic Pricing Strategies"
 URL = ""
 EMAIL = "denispmaciel@gmail.com"
 AUTHOR = "Denis Maciel"
