@@ -1,5 +1,15 @@
+# -*- coding: utf-8 -*-
+# %% [markdown]
+# # Online Network Revenue Management
+#
+# Ferreira, Kris Johnson, David Simchi-Levi, and He Wang. “Online Network Revenue Management Using Thompson Sampling”
+
+# %% [markdown]
+# Below is the implementation of the TS-Fixed algorithm described in the mentioned paper above.
+
 # %%
 import random
+import copy
 from typing import List, NamedTuple, Tuple, Iterable, Dict, Any
 
 import numpy as np
@@ -61,22 +71,6 @@ def beliefs() -> Beliefs:
     ]
 
 
-# %%
-# def compute_expected_value(
-#     price_strategy: Iterable[float],
-#     prices: Iterable[float],
-#     true_prob: Iterable[float],
-# ) -> float:
-#     """
-#     price_strategy: 
-#         probability distribution over allowed set of prices
-#     price:
-#         vector of allowed prices
-#     true_prob:
-#         true probabilty of customer buying given a price 
-#     """
-#     return np.dot(price_strategy, np.array(true_prob) * np.array(prices))
-
 # %% [markdown]
 # ## How does the seller behave?
 #
@@ -128,6 +122,9 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
     
     return opt
 
+
+# %% [markdown]
+# Optimal strategy if the seller knew the actual demand.
 
 # %%
 class _:
@@ -213,7 +210,7 @@ def thompson(b: Belief) -> float:
 
 # %%
 N_TRIALS = 500
-N_PERIODS = 250
+N_PERIODS = 500
 alpha = 0.25
 INVENTORY = alpha*N_PERIODS
 
@@ -235,14 +232,19 @@ def record_state(
     beliefs = {f"price_{b.price}": b.prior.expected_value for b in seller.beliefs}
     return {"t": t, "price": p, "period_revenue": p * q, **beliefs}
 
-
-# %%
-simulation = simulate(
+ts_fixed = simulate(
     S=N_TRIALS,
     T=N_PERIODS,
     trial_runner=trial_factory(initialize_trial, record_state),
 )
 
+from dynpric.simulation_engine import flatten_results
+
+flatten_results(ts_fixed).to_parquet(f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet")
+
+
+# %% [markdown]
+# ## Clairvoyant Seller
 
 # %%
 def sample_optimal_price(_):
@@ -250,73 +252,24 @@ def sample_optimal_price(_):
     prices = [29.9, 34.9, 39.9, 44.9]
     return float(np.random.choice(prices, size=1, p=probs))
 
-ConstrainedSeller.choose_price = sample_optimal_price
 
-0.75 * 39.9 * 0.3 + 0.25 * 44.9 * 0.1
+ClairvoyantSeller = copy.deepcopy(ConstrainedSeller)
+ClairvoyantSeller.choose_price = sample_optimal_price
 
-# %%
-import time
 
-start = time.perf_counter()
+def clairvoyat_initialize_trial() -> Tuple[Market, Seller]:
+    return (
+        BinomialMarket(price_levels),
+        ClairvoyantSeller(beliefs(), thompson, INVENTORY, N_PERIODS,),
+    )
 
-simulation = simulate(
+
+clairvoyant = simulate(
     S=N_TRIALS,
     T=N_PERIODS,
-    trial_runner=trial_factory(initialize_trial, record_state)
+    trial_runner=trial_factory(clairvoyat_initialize_trial, record_state),
 )
 
-end = time.perf_counter()
-
-print("Simulation completed in {}".format(end - start))
-
-# %%
-from plotnine import *
-
-from dynpric.simulation_engine import flatten_results
-results = flatten_results(simulation)
-
-# %%
-from collections import Counter
-
-Counter(results.price)
-
-# %%
-revenue = results.groupby('t').period_revenue.mean()
-(
-    ggplot(aes(revenue.index, revenue))
-    + geom_line()
-    + lims(y=(5, 20)) 
-    + geom_hline(aes(yintercept=10), color='red')
+flatten_results(clairvoyant).to_parquet(
+    f"data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
 )
-
-# %%
-results[['t','price_29.9', 'price_34.9', 'price_39.9', 'price_44.9']].groupby('t').mean().plot()
-
-# %%
-counts_per_step = results.groupby(["t", "price"]).size().reset_index(name="n")
-counts_per_step["pp"] = counts_per_step["n"] / N_TRIALS
-
-plot = (
-    ggplot(counts_per_step, aes("t", "pp", color="factor(price)"))
-    + geom_line()
-    + labs(title="How often price x was offered in period t averaged across all trials",
-           y='%',
-           color="Price Levels")
-    + lims(y=(0,1))
-    + facet_wrap('price') 
-)
-
-plot
-
-# %%
-boo = counts_per_step["price"] == 44.9
-
-(
-    ggplot(counts_per_step[boo], aes("t", "pp"))
-    + geom_line()
-    + labs(y="Demos", color="A")
-)
-
-
-# %%
-counts_per_step.groupby(["price"]).pp.mean()
