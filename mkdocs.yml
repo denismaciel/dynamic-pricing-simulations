@@ -7,10 +7,18 @@ theme:
       text: IBM Plex Sans
       code: SF Mono
 nav:
-  - Simulations:
-    - Thompson Sampling: notebooks/nb_thompson_vs_greedy.md
+- Simulations:
+    Thompson Sampling: notebooks/nb_thompson_vs_greedy.md
+- Dynamic Programming: notebooks/simulations/nb_dynamic_programming.md
+
 markdown_extensions:
-  - codehilite:
+- codehilite:
       guess_lang: true
+- pymdownx.arithmatex:
+      generic: true
 repo_name: Source Code
 repo_url: https://github.com/denismaciel/dynamic-pricing-simulations
+extra_javascript:
+- javascripts/config.js
+- https://polyfill.io/v3/polyfill.min.js?features=es6
+- https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
