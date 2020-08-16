@@ -374,37 +374,38 @@
 <li>a discrete-time dynamic process</li>
 <li>and a cost function that is additive over time.</li>
 </ul>
-<p>There is a process that happens in stages and an agent is allowed to act in each stage with the objective of minimizing a pre-defined cost function. Every action of the agent must not be considered in isolation. Rather, while deciding what to do in period $k$, the agent should usually weigh in the effects that her current actions might have on subsequent (future) stages. Such a general framework, as one might expect, has applications in very diverse fields such as computer science, operations research and economics.</p>
+<p>There is a process that happens in stages and an agent is allowed to act in each stage with the objective of minimizing a pre-defined cost function. Every action of the agent must not be considered in isolation. Rather, while deciding what to do in period <span class="arithmatex">\(k\)</span>, the agent should usually weigh in the effects that her current actions might have on subsequent (future) stages. Such a general framework, as one might expect, has applications in very diverse fields such as computer science, operations research and economics.</p>
 <p>A dynamic system is usually described as follows:</p>
-<p>\begin{equation}
-    x_{k+1} = f_k(x_k, u_k, w_k)
-\end{equation}</p>
+<p>x_{k+1} = f_k(x_k, u_k, w_k)</p>
 <p>where</p>
 <ul>
-<li>$k \in {0,1...,N-1}$ is the time index</li>
-<li>$x_k$ is the state of the system at time $k$</li>
-<li>$u_k$ is the control variable through which the agent can influence the system's state</li>
-<li>$w_k$ is the disturbance, a random variable whose realization also determines the system's state</li>
-<li>$f_k$ is a function that that describes the mechanism through which the system state is updated.</li>
+<li><span class="arithmatex">\(k \in \{0,1...,N-1\}\)</span> is the time index</li>
+<li><span class="arithmatex">\(x_k\)</span> is the state of the system at time <span class="arithmatex">\(k\)</span></li>
+<li><span class="arithmatex">\(u_k\)</span> is the control variable through which the agent can influence the system's state</li>
+<li><span class="arithmatex">\(w_k\)</span> is the disturbance, a random variable whose realization also determines the system's state</li>
+<li><span class="arithmatex">\(f_k\)</span> is a function that that describes the mechanism through which the system state is updated.</li>
 </ul>
 <p>To fully characterize the decision problem, a cost function that will steer the agent's decision-making. The total cost is</p>
-<p>\begin{equation}
-    g_N(x_N) + \sum\limits_{k=0}^{N-1} g_k(x_k, u_k, w_k)
-\end{equation}</p>
-<p>where $g_N(x_N)$ is the final cost occured right at the very end of the process.</p>
+<div class="codehilite"><pre><span></span><code><span class="err">\begin{equation}</span>
+<span class="err">    g_N(x_N) + \sum\limits_{k=0}^{N-1} g_k(x_k, u_k, w_k)</span>
+<span class="err">\end{equation}</span>
+</code></pre></div>
+
+
+<p>where <span class="arithmatex">\(g_N(x_N)\)</span> is the final cost occured right at the very end of the process.</p>
 <h2 id="pricing-as-a-dynamic-programming-problem">Pricing as a dynamic programming problem</h2>
 <ul>
-<li>The state $x_k$ is the inventory.</li>
-<li>The control $u_k$ is the price.  $u_k \in {5, 10}$</li>
-<li>The random noise $w_k$ is the demand.</li>
+<li>The state <span class="arithmatex">\(x_k\)</span> is the inventory.</li>
+<li>The control <span class="arithmatex">\(u_k\)</span> is the price.  <span class="arithmatex">\(u_k \in \{5, 10\}\)</span></li>
+<li>The random noise <span class="arithmatex">\(w_k\)</span> is the demand.</li>
 </ul>
-<p>\begin{equation}
+<div class="arithmatex">\[\begin{equation}
    x_{k+1} = f(x_k, u_k, w_k) = 
     \begin{cases}
-        x_k - 1 &amp; \text{if $w_k = 1$ }\
-        x_k &amp; \text{if $w_k = 0$ }\
+        x_k - 1 &amp; \text{if $w_k = 1$ }\\
+        x_k &amp; \text{if $w_k = 0$ }\\
     \end{cases}
-\end{equation}</p>
+\end{equation}\]</div>
 <h2 id="cost-function">Cost function</h2>
 <p>$g_k = $</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
@@ -534,6 +535,12 @@
           }, typeof search !== "undefined" && search)
         })
       </script>
+      
+        <script src="../../../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>
