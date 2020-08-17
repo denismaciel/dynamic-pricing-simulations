@@ -26,10 +26,20 @@ def sync_notebooks():
             print(f"Skipping {files}")
 
 
-def make_markdown(execute=False):
-    targets = (home / "simulations").rglob("*.ipynb")
-    output_dir = home.absolute() / "docs" / "notebooks"
-    notebooks = " ".join([str(nb.absolute()) for nb in targets])
+notebooks = [
+    "simulations/demand/nb_reservation_price_demand",
+    "simulations/dynamic_programming/nb_dynamic_programming",
+    "simulations/online_network_revenue_management/simulation",
+    "simulations/online_network_revenue_management/analysis",
+    "simulations/thompson_sampling/nb_thompson_vs_greedy",
+]
+
+def make_markdown(path, execute=False):
+    notebook_path = Path(path + ".ipynb").absolute()
+    if not notebook_path.exists():
+        raise FileNotFoundError(f'Notebook {path} does not exist')
+    parent = notebook_path.absolute().parent.stem
+    output_dir = root.absolute() / "docs" / "notebooks" / parent
     execute = "--execute" if execute else ""
     cmd = f"""jupyter nbconvert \
             {execute} \
@@ -43,14 +53,6 @@ def make_markdown(execute=False):
     os.system(cmd)
 
 
-if __name__ == "__main__":
-    if sys.argv[1] == "sync_notebooks":
-        sync_notebooks()
-    elif sys.argv[1] == "make_markdown":
-        if sys.argv[2] == "execute":
-            make_markdown(execute=True)
-        else:
-            make_markdown(execute=False)
-    else:
-        print("Unknown command")
+for n in notebooks:
+    make_markdown(n, execute=False)
 

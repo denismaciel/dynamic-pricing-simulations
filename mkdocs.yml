@@ -7,9 +7,12 @@ theme:
       text: IBM Plex Sans
       code: SF Mono
 nav:
-- Simulations:
-    Thompson Sampling: notebooks/nb_thompson_vs_greedy.md
-- Dynamic Programming: notebooks/simulations/nb_dynamic_programming.md
+- Thompson sampling: notebooks/thompson_sampling/nb_thompson_vs_greedy.md
+- Dynamic programming: notebooks/dynamic_programming/nb_dynamic_programming.md
+- Demand functions: notebooks/demand/nb_reservation_price_demand.md
+- Online Network Revenue Management: 
+      Simulation: notebooks/online_network_revenue_management/simulation.md
+      Analysis: notebooks/online_network_revenue_management/analysis.md
 
 markdown_extensions:
 - codehilite:

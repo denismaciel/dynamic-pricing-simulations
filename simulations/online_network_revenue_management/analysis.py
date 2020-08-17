@@ -21,7 +21,7 @@ import pandas as pd
 
 from dynpric.notebook import project_root_dir
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 N_TRIALS = 500
 N_PERIODS = 500
@@ -46,10 +46,12 @@ revenue_over_time = (
     + geom_line()
     + lims(y=(0, 15))
     + geom_hline(aes(yintercept=clairvoyant_avg_revenue), color="red")
-    + labs(y="Revenue", x='Periods')
+    + labs(y="Revenue", x="Periods")
 )
 
-revenue_over_time.save(FIGS_DIR / 'online_net_reveue_over_time.png', dpi=300, height=3, width=3)
+revenue_over_time.save(
+    FIGS_DIR / "online_net_reveue_over_time.png", dpi=300, height=3, width=3
+)
 revenue_over_time
 
 # %%
@@ -63,7 +65,13 @@ df = (
 df
 
 # %%
-(ggplot(df, aes(x="t", y="pp", color="price")) + geom_line() + facet_wrap("price"))
+(
+    ggplot(df, aes(x="t", y="pp", color="price"))
+    + geom_line()
+    + labs(y="Probability")
+    + lims(y=(0, 1))
+    + facet_wrap("price")
+)
 
 # %%
 counts_per_step = ts_fixed.groupby(["t", "price"]).size().reset_index(name="n")
