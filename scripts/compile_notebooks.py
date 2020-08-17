@@ -44,9 +44,11 @@ root = Path()
 
 notebooks = [
     "simulations/demand/nb_reservation_price_demand",
-    # "simulations/dynamic_programming/nb_dynamic_programming",
-    # "simulations/online_network_revenue_management/sim",
-    # "simulations/thompson_sampling/nb_thompson_vs_greedy",
+    "simulations/dynamic_programming/nb_dynamic_programming",
+    "simulations/online_network_revenue_management/simulation",
+    "simulations/online_network_revenue_management/analysis",
+    "simulations/thompson_sampling/nb_thompson_vs_greedy",
+
 ]
 
 def make_markdown(path, execute=False):
@@ -69,5 +71,6 @@ def make_markdown(path, execute=False):
 
 
 for n in notebooks:
-    make_markdown(n, execute=True)
+    make_markdown(n, execute=False)
+
 
