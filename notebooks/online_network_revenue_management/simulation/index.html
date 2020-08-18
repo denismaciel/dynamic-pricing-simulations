@@ -1,0 +1,761 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.3.2">
+    
+    
+      
+        <title>Simulation - Dynamic Pricing</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.fe0cca5b.min.css">
+      
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.a46bcfb3.min.css">
+      
+      
+        
+        
+        <meta name="theme-color" content="">
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:300,400,400i,700%7CSF+Mono&display=fallback">
+        <style>body,input{font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"SF Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#online-network-revenue-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../../.." title="Dynamic Pricing" class="md-header-nav__button md-logo" aria-label="Dynamic Pricing">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Dynamic Pricing
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Simulation
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/denismaciel/dynamic-pricing-simulations/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Source Code
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Dynamic Pricing" class="md-nav__button md-logo" aria-label="Dynamic Pricing">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Dynamic Pricing
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/denismaciel/dynamic-pricing-simulations/" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Source Code
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../thompson_sampling/nb_thompson_vs_greedy/" title="Thompson sampling" class="md-nav__link">
+      Thompson sampling
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../dynamic_programming/nb_dynamic_programming/" title="Dynamic programming" class="md-nav__link">
+      Dynamic programming
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../demand/nb_reservation_price_demand/" title="Demand functions" class="md-nav__link">
+      Demand functions
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
+    
+    <label class="md-nav__link" for="nav-4">
+      Online Network Revenue Management
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z"/></svg>
+      </span>
+    </label>
+    <nav class="md-nav" aria-label="Online Network Revenue Management" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+        </span>
+        Online Network Revenue Management
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="Simulation" class="md-nav__link md-nav__link--active">
+      Simulation
+    </a>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../analysis/" title="Analysis" class="md-nav__link">
+      Analysis
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/denismaciel/dynamic-pricing-simulations/edit/master/docs/notebooks/online_network_revenue_management/simulation.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                  
+                
+                
+                <h1 id="online-network-revenue-management">Online Network Revenue Management</h1>
+<p>Below is the implementation of the TS-Fixed algorithm described in <strong>Ferreira, Kris Johnson, David Simchi-Levi, and He Wang. “Online Network Revenue Management Using Thompson Sampling”</strong></p>
+<h1 id="setup">Setup</h1>
+<p>The setup consists of a seller of one good with limited stock and that can set one of four different prices during a selling season that lasts T periods. The available prices are 29.9, 34.9, 39.9, 44.9. Each price is associated with a demand that is entirely unknown to the seller at the beginning of the season. At each period, the demand can be either 0 or 1 unit. The seller can directly affect the probability that demand turns out to be one by setting the price.</p>
+<p>The correspondence between price and demand is the following:</p>
+<ul>
+<li>When the price is 29.9, demand will be 1 with probability 0.8</li>
+<li>When the price is 34.9, demand will be 1 with probability 0.6</li>
+<li>When the price is 39.9, demand will be 1 with probability 0.3</li>
+<li>When the price is 44.9, demand will be 1 with probability 0.1</li>
+</ul>
+<p>As one would expect, the higher the price, the lower the expected value of the demand. As already mentioned, this correspondence is unknown to the seller at period t = 0. The way the seller learns about the demand is by setting different prices and observing the resulting demand.</p>
+<p>In what follows, we consider the seller to be Bayesian. The seller has the prior belief that the probability for every price is <span class="arithmatex">\(Beta(1,1)\)</span> distributed.  It is equivalent to a uniform distribution over the interval <span class="arithmatex">\([0,1]\)</span>. For every available price, the seller assumes that the corresponding probability is equally likely any number between 0 and 1. Thus, the seller beliefs do not incorporate even the commonsense that the higher the price, the lower the demand. According to seller's priors, it is as likely that the price 29.9 corresponds to a probability of 0.01 as the price 44.9 corresponds to a probability of 0.99.</p>
+<p>We will see later that, despite this rather unreasonable priors, the seller ends up learning the true demand parameters quite accurately.</p>
+<p>Now to the code. We start with the necessary imports.</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">linprog</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize.optimize</span> <span class="kn">import</span> <span class="n">OptimizeResult</span>
+
+<span class="kn">from</span> <span class="nn">dynpric.market</span> <span class="kn">import</span> <span class="n">Market</span><span class="p">,</span> <span class="n">Price</span><span class="p">,</span> <span class="n">Quantity</span>
+<span class="kn">from</span> <span class="nn">dynpric.seller</span> <span class="kn">import</span> <span class="n">Seller</span>
+<span class="kn">from</span> <span class="nn">dynpric.priors</span> <span class="kn">import</span> <span class="n">BetaPrior</span>
+<span class="kn">from</span> <span class="nn">dynpric.simulation_engine</span> <span class="kn">import</span> <span class="n">simulate</span><span class="p">,</span> <span class="n">trial_factory</span>
+</code></pre></div>
+
+
+<p>Next, we need to decide how to store the necessary information during the simulations.</p>
+<p>The prices and the true demand probabilities do not change during the simulation. For that reason, we store them in a named tuple called <code>PriceLevel</code>. <code>PriceLevel.true_prob</code> gives the probability that demand equals one when price is set to <code>PriceLevel.price</code>.</p>
+<p>The beliefs of the seller needs to be updated at the end of every period when the seller learns about a new realization of the demand. With that in mind, we store the beliefs in the named tuple <code>Belief</code>. It contains two elements: a price, which is a <code>float</code>, and an instance of <code>BetaPrior</code>. The method <code>BetaPrior.update</code> is responsible for the Bayesian updating. It takes the realization of the demand and updates the parameters <span class="arithmatex">\(\alpha\)</span> and <span class="arithmatex">\(\beta\)</span> of the Beta distribution.</p>
+<p>Also, at the beginning of every trial, the beliefs need to be reset to the priors <span class="arithmatex">\(Beta(1,1)\)</span>. This is accomplished with the function <code>beliefs</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">PriceLevel</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Container of the information that characterizes the state of a price level</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">price</span><span class="p">:</span> <span class="n">Price</span>
+    <span class="n">true_prob</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="n">PriceLevels</span> <span class="o">=</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">PriceLevel</span><span class="p">]</span>
+
+<span class="n">price_levels</span><span class="p">:</span> <span class="n">PriceLevels</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">PriceLevel</span><span class="p">(</span><span class="mf">29.9</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span>
+    <span class="n">PriceLevel</span><span class="p">(</span><span class="mf">34.9</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span>
+    <span class="n">PriceLevel</span><span class="p">(</span><span class="mf">39.9</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+    <span class="n">PriceLevel</span><span class="p">(</span><span class="mf">44.9</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Belief</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="n">price</span><span class="p">:</span> <span class="n">Price</span>
+    <span class="n">prior</span><span class="p">:</span> <span class="n">BetaPrior</span>
+
+
+<span class="n">Beliefs</span> <span class="o">=</span> <span class="n">List</span><span class="p">[</span><span class="n">Belief</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">beliefs</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Beliefs</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reset the state of beliefs when initializing a new simulation trial</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">Belief</span><span class="p">(</span><span class="mf">29.9</span><span class="p">,</span> <span class="n">BetaPrior</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+        <span class="n">Belief</span><span class="p">(</span><span class="mf">34.9</span><span class="p">,</span> <span class="n">BetaPrior</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+        <span class="n">Belief</span><span class="p">(</span><span class="mf">39.9</span><span class="p">,</span> <span class="n">BetaPrior</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+        <span class="n">Belief</span><span class="p">(</span><span class="mf">44.9</span><span class="p">,</span> <span class="n">BetaPrior</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span>
+    <span class="p">]</span>
+</code></pre></div>
+
+
+<h2 id="sellers-optimization-problem">Seller's optimization problem</h2>
+<p>The process for the seller to determine which price set comprises three steps:</p>
+<ol>
+<li>Esimate the demand</li>
+<li>Given the demand estimates, comupte an optimal price mixture</li>
+<li>Sample one price from the mixture</li>
+</ol>
+<p><strong>Demand estimation</strong>. The first step is to pick a demand probability for each price in order to feed it to the optimization algorithm. This is done via Thompson sampling: the demand probability is sampled from the beta distribution associated with each price. The method <code>Belief.BetaPrior.sample</code> implements exactly that. An alternative to come up with the demand probability is to select the expected value of the beta distribution instead of sampling. This is the greedy approach and is exemplified by the function <code>greedy</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">thompson</span><span class="p">(</span><span class="n">b</span><span class="p">:</span> <span class="n">Belief</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+
+<span class="k">def</span> <span class="nf">greedy</span><span class="p">(</span><span class="n">b</span><span class="p">:</span> <span class="n">Belief</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">expected_value</span>  <span class="c1"># type: ignore</span>
+</code></pre></div>
+
+
+<p><strong>Optimization</strong>. Given the pairs of prices and demand probabilities, the seller now needs to solve an optimization problem. Ideally, she wants to maximize revenue, but she also must manage a limited inventory. The model specifies that the seller starts with a fixed amount of inventory and is not allowed to replenish it during the sales season. TS-fixed deals with the inventory constraint in a rather static way. During the optimization, we enforce that the resulting expected demand is smaller or equal to a constant <span class="arithmatex">\(c\)</span>, which is the ratio between the inventory and the length of the selling season. <span class="arithmatex">\(c\)</span> is set at the beginning of the selling season and is <strong>not</strong> updated to reflect the actual development of the inventory. That is the reason why it bears "fixed" in its name.</p>
+<p>The optimization result is a vector <span class="arithmatex">\(x = (x_1, x_2, x_3, x_4)\)</span>, the elements of which tell us the probability with which a price level should be chosen.</p>
+<p>We formalize the optimization problem below mathematically and in code. For solving it, we use the library scipy. Notice that scipy only does minimizations requires all of the constraints to be specified in the form of "less or equal to." That is the reason for the somewhat unintuitive minus signs used in the objective function and constraints.</p>
+<div class="arithmatex">\[\begin{equation}
+LP(d(t)): \max_{x_1, x_2, x_3, x_4} Q = (p_1 q_1) x_1 + (p_2 q_2) x_2 + (p_3 q_3) x_3 + (p_4 q_4) x_4 \\
+\text{subject to } \\
+Q &lt; c \\
+x_1 + x_2 + x_3 + x_4 \leq 1 \\
+x_1, x_2, x_3, x_4 \geq 0
+\end{equation}\]</div>
+<!-- The seller needs to be mindful not to exhaust the full inventory before exploiting the learnings from the exploration.   -->
+
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">find_optimal_price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prices</span><span class="p">,</span> <span class="n">demand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OptimizeResult</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">demand</span><span class="p">)</span>
+    <span class="c1"># The reason for the minus sign is that scipy only does minimizations</span>
+    <span class="n">objective</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">demand</span><span class="p">)]</span>
+
+    <span class="c1"># --- Constraints ---</span>
+
+    <span class="c1"># 1. Demand is smaller equal than available inventory</span>
+    <span class="n">c1</span> <span class="o">=</span> <span class="p">[</span><span class="n">demand</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">]</span>
+
+    <span class="c1"># Sum of probabilities smaller equal one</span>
+    <span class="n">c2</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,),</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># 3. Probability of picking a price must be or equal to greater than zero</span>
+    <span class="n">c3</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,),</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">]</span>
+
+    <span class="n">constraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="o">*</span><span class="n">c3</span><span class="p">]</span>
+
+    <span class="n">lhs_ineq</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">rhs_ineq</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+        <span class="n">lhs_ineq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lhs</span><span class="p">)</span>
+        <span class="n">rhs_ineq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rhs</span><span class="p">)</span>
+
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">linprog</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">objective</span><span class="p">,</span> <span class="n">A_ub</span><span class="o">=</span><span class="n">lhs_ineq</span><span class="p">,</span> <span class="n">b_ub</span><span class="o">=</span><span class="n">rhs_ineq</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;revised simplex&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">opt</span>
+</code></pre></div>
+
+
+<p>The solution to the optimization problem of a clairvoyant seller (a seller that knows the actual underlying demand probabilities from the start) is shown below.</p>
+<p>We create the <code>ThrowAwayClass</code> because <code>find_optimal_price</code> is meant to be a method and takes an instance (usually denoted by <code>self</code> in Python) as its first argument.  To compute the optimal prices, we need the attribute <code>c</code> representing the ratio between the inventory and the periods in the selling season. </p>
+<p>If we set the inventory to 1/4 of the selling season length, the optimal price is to choose \$ 44.9 with probability 0.25 and \$ 39.9 with probability 0.75. If we set it to 1/2, the optimal price is to choose \<span class="arithmatex">\(39.9 1/3 of the time and \\\)</span>34.9 the other 2/3. This illustrates the general tendency that <em>ceteris paribues</em></p>
+<ul>
+<li>if selling season becomes longer, the optimal price increase</li>
+<li>if the initial stock gets larger, the optimal price decreases</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">ThrowAwayClass0</span><span class="p">:</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mf">0.25</span>
+
+<span class="k">class</span> <span class="nc">ThrowAwayClass1</span><span class="p">:</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+<span class="n">demand</span> <span class="o">=</span> <span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">true_prob</span> <span class="k">for</span> <span class="n">pl</span> <span class="ow">in</span> <span class="n">price_levels</span><span class="p">]</span>  <span class="c1"># true probabilities</span>
+<span class="n">price</span> <span class="o">=</span> <span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">pl</span> <span class="ow">in</span> <span class="n">price_levels</span><span class="p">]</span>
+
+
+<span class="n">opt_result</span> <span class="o">=</span> <span class="n">find_optimal_price</span><span class="p">(</span><span class="n">ThrowAwayClass0</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">demand</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=== Low inventory to duration of selling season ratio ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">x</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Choose price </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> with probability </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+
+<span class="n">opt_result</span> <span class="o">=</span> <span class="n">find_optimal_price</span><span class="p">(</span><span class="n">ThrowAwayClass1</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">demand</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">=== High inventory to duration of selling season ratio ===&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">opt_result</span><span class="o">.</span><span class="n">x</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Choose price </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> with probability </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">prob</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code><span class="o">===</span> <span class="n">Low</span> <span class="n">inventory</span> <span class="k">to</span> <span class="n">duration</span> <span class="k">of</span> <span class="n">selling</span> <span class="n">season</span> <span class="n">ratio</span> <span class="o">===</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">29</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">34</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">39</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">75</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">44</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">25</span>
+
+
+<span class="o">===</span> <span class="n">High</span> <span class="n">inventory</span> <span class="k">to</span> <span class="n">duration</span> <span class="k">of</span> <span class="n">selling</span> <span class="n">season</span> <span class="n">ratio</span> <span class="o">===</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">29</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">34</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">67</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">39</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">33</span>
+<span class="n">Choose</span> <span class="n">price</span> <span class="mi">44</span><span class="p">.</span><span class="mi">9</span> <span class="k">with</span> <span class="n">probability</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span>
+</code></pre></div>
+
+
+<h2 id="putting-everything-together">Putting everything together</h2>
+<p>We now have all the elements to construct the <code>TSFixedSeller</code> class.</p>
+<p>To initialize an instance of the class, we need to specify:</p>
+<ul>
+<li>the beliefs about the demand function, which are beta distributed</li>
+<li>a strategy to estimate the demand given the current beliefs, which is done via Thompson sampling</li>
+<li>the initial inventory</li>
+<li>and the length of the season</li>
+</ul>
+<p>With this information, the seller is now ready to interact with the environment. At every period, the interaction takes place via two actions: setting a price (<code>TSFixedSeller.choose_price</code>) and observing the realized demand (<code>TSFixedSeller.observe_demand</code>). </p>
+<p>The price-setting is the result ofestimating the demand via Thompson sampling (<code>TSFixedSeller._estimate_demand</code>), passing the estimated demans through the optimizer (<code>TSFixedSeller._find_optimal_price</code>) and finally sampling one price out of the distribution given by the optimizer.</p>
+<p>The price is then fed into the <code>BernoulliMarket</code>, which simulates the demand by runnning a Bernoulli trial with success probability dependent on the price set.</p>
+<p>Finally, the seller observes the realized demand (either 0 or 1) and updates her beliefs about the selected price in a Bayesian fashion.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">TSFixedSeller</span><span class="p">(</span><span class="n">Seller</span><span class="p">):</span>
+
+    <span class="n">_find_optimal_price</span> <span class="o">=</span> <span class="n">find_optimal_price</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beliefs</span><span class="p">,</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">inventory</span><span class="p">,</span> <span class="n">n_periods</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span> <span class="o">=</span> <span class="n">beliefs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">strategy</span> <span class="o">=</span> <span class="n">strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inventory</span> <span class="o">=</span> <span class="n">inventory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">inventory</span> <span class="o">/</span> <span class="n">n_periods</span>
+
+    <span class="k">def</span> <span class="nf">choose_price</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Price</span><span class="p">:</span>
+        <span class="n">demand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_estimate_demand</span><span class="p">()</span>
+        <span class="n">prices</span> <span class="o">=</span> <span class="p">[</span><span class="n">belief</span><span class="o">.</span><span class="n">price</span> <span class="k">for</span> <span class="n">belief</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span><span class="p">]</span>
+
+        <span class="n">opt_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_optimal_price</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">demand</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">sample_price</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">prices</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">probs</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>
+
+            <span class="c1"># Ensure probs are always positive</span>
+            <span class="n">rounded_probs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">decimals</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">p</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">rounded_probs</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">rounded_probs</span><span class="p">)</span>
+
+            <span class="c1"># Normalize probs to add up to one</span>
+            <span class="n">normalized_probs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">rounded_probs</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">rounded_probs</span><span class="p">]</span>
+            <span class="n">sampled_price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">normalized_probs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">sampled_price</span><span class="p">)</span>
+
+        <span class="n">chosen_price</span> <span class="o">=</span> <span class="n">sample_price</span><span class="p">(</span><span class="n">opt_result</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">prices</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">chosen_price</span>
+
+    <span class="k">def</span> <span class="nf">observe_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="n">Quantity</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Price</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># update beliefs with observerd demand</span>
+        <span class="n">belief</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">belief</span> <span class="k">for</span> <span class="n">belief</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span> <span class="k">if</span> <span class="n">belief</span><span class="o">.</span><span class="n">price</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">belief</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_estimate_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">demand</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">strategy</span><span class="p">(</span><span class="n">belief</span><span class="p">)</span> <span class="k">for</span> <span class="n">belief</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">beliefs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">demand</span>
+
+
+<span class="k">class</span> <span class="nc">BernoulliMarket</span><span class="p">(</span><span class="n">Market</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_levels</span><span class="p">:</span> <span class="n">PriceLevels</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price_levels</span> <span class="o">=</span> <span class="n">price_levels</span>
+
+    <span class="k">def</span> <span class="nf">_simulate_buying_decision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">price_level</span><span class="p">:</span> <span class="n">PriceLevel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Quantity</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">price_level</span><span class="o">.</span><span class="n">true_prob</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">realize_demand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Price</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Quantity</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">price_levels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pl</span><span class="o">.</span><span class="n">price</span> <span class="o">==</span> <span class="n">p</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_simulate_buying_decision</span><span class="p">(</span><span class="n">pl</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Price </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2"> is not an allowed price.&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<h2 id="simulation">Simulation</h2>
+<h3 id="parameters">Parameters</h3>
+<p>We run 500 trials, each of which consisting of selling season with 500 periods. Inventory is set to 1/4 of the selling season length.</p>
+<p>At the end of each period, we record the price, revenue and the belief about the underlying demand of the selller for later analysis.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">N_TRIALS</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">N_PERIODS</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">INVENTORY</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">*</span><span class="n">N_PERIODS</span>
+</code></pre></div>
+
+
+<h3 id="ts-fixed">TS-fixed</h3>
+<p>Run the simulation for <code>TSFixerSeller</code>.</p>
+<p>Note that the trials might finish out of order. It happens because they are running in multiple processes in order to take advantage of all the CPU cores of the computer.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">initialize_trial</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Market</span><span class="p">,</span> <span class="n">Seller</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">BernoulliMarket</span><span class="p">(</span><span class="n">price_levels</span><span class="p">),</span>
+        <span class="n">TSFixedSeller</span><span class="p">(</span><span class="n">beliefs</span><span class="p">(),</span> <span class="n">thompson</span><span class="p">,</span> <span class="n">INVENTORY</span><span class="p">,</span> <span class="n">N_PERIODS</span><span class="p">,),</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">record_state</span><span class="p">(</span>
+    <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">market</span><span class="p">:</span> <span class="n">Market</span><span class="p">,</span> <span class="n">seller</span><span class="p">:</span> <span class="n">Seller</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="n">Price</span><span class="p">,</span> <span class="n">q</span><span class="p">:</span> <span class="n">Quantity</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+
+    <span class="n">beliefs</span> <span class="o">=</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;price_</span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">price</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">expected_value</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">seller</span><span class="o">.</span><span class="n">beliefs</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span><span class="p">:</span> <span class="n">p</span><span class="p">,</span> <span class="s2">&quot;period_revenue&quot;</span><span class="p">:</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="o">**</span><span class="n">beliefs</span><span class="p">}</span>
+
+<span class="n">ts_fixed</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span>
+    <span class="n">S</span><span class="o">=</span><span class="n">N_TRIALS</span><span class="p">,</span>
+    <span class="n">T</span><span class="o">=</span><span class="n">N_PERIODS</span><span class="p">,</span>
+    <span class="n">trial_runner</span><span class="o">=</span><span class="n">trial_factory</span><span class="p">(</span><span class="n">initialize_trial</span><span class="p">,</span> <span class="n">record_state</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">dynpric.simulation_engine</span> <span class="kn">import</span> <span class="n">flatten_results</span>
+
+<span class="n">flatten_results</span><span class="p">(</span><span class="n">ts_fixed</span><span class="p">)</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data/ts_fixed_trials</span><span class="si">{</span><span class="n">N_TRIALS</span><span class="si">}</span><span class="s2">_periods</span><span class="si">{</span><span class="n">N_PERIODS</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code><span class="err">Starting simulation...</span>
+<span class="err">Finished trial number 0</span>
+<span class="err">Finished trial number 100</span>
+<span class="err">Finished trial number 50</span>
+<span class="err">Finished trial number 200</span>
+<span class="err">Finished trial number 150</span>
+<span class="err">Finished trial number 250</span>
+<span class="err">Finished trial number 300</span>
+<span class="err">Finished trial number 350</span>
+<span class="err">Finished trial number 450</span>
+<span class="err">Finished trial number 400</span>
+<span class="err">Simulation completed in 204.427882092 seconds</span>
+</code></pre></div>
+
+
+<h3 id="clairvoyant-seller">Clairvoyant Seller</h3>
+<p>We simulate the same setting for a clairvoyant seller. In fact, we can even reuse all of <code>TSFixedSeller</code> functionality only change the <code>choose_price</code> method by enforcing it to always return the optimal price mixture.</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">sample_optimal_price</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
+    <span class="n">probs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">]</span>
+    <span class="n">prices</span> <span class="o">=</span> <span class="p">[</span><span class="mf">29.9</span><span class="p">,</span> <span class="mf">34.9</span><span class="p">,</span> <span class="mf">39.9</span><span class="p">,</span> <span class="mf">44.9</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">))</span>
+
+
+<span class="n">ClairvoyantSeller</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">TSFixedSeller</span><span class="p">)</span>
+<span class="n">ClairvoyantSeller</span><span class="o">.</span><span class="n">choose_price</span> <span class="o">=</span> <span class="n">sample_optimal_price</span>
+
+
+<span class="k">def</span> <span class="nf">clairvoyant_initialize_trial</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Market</span><span class="p">,</span> <span class="n">Seller</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="n">BernoulliMarket</span><span class="p">(</span><span class="n">price_levels</span><span class="p">),</span>
+        <span class="n">ClairvoyantSeller</span><span class="p">(</span><span class="n">beliefs</span><span class="p">(),</span> <span class="n">thompson</span><span class="p">,</span> <span class="n">INVENTORY</span><span class="p">,</span> <span class="n">N_PERIODS</span><span class="p">,),</span>
+    <span class="p">)</span>
+
+
+<span class="n">clairvoyant</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span>
+    <span class="n">S</span><span class="o">=</span><span class="n">N_TRIALS</span><span class="p">,</span>
+    <span class="n">T</span><span class="o">=</span><span class="n">N_PERIODS</span><span class="p">,</span>
+    <span class="n">trial_runner</span><span class="o">=</span><span class="n">trial_factory</span><span class="p">(</span><span class="n">clairvoyant_initialize_trial</span><span class="p">,</span> <span class="n">record_state</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">flatten_results</span><span class="p">(</span><span class="n">clairvoyant</span><span class="p">)</span><span class="o">.</span><span class="n">to_parquet</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;data/clairvoyant_trials</span><span class="si">{</span><span class="n">N_TRIALS</span><span class="si">}</span><span class="s2">_periods</span><span class="si">{</span><span class="n">N_PERIODS</span><span class="si">}</span><span class="s2">.parquet&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code><span class="err">Starting simulation...</span>
+<span class="err">Finished trial number 0</span>
+<span class="err">Finished trial number 100</span>
+<span class="err">Finished trial number 50</span>
+<span class="err">Finished trial number 200</span>
+<span class="err">Finished trial number 150</span>
+<span class="err">Finished trial number 250</span>
+<span class="err">Finished trial number 300</span>
+<span class="err">Finished trial number 350</span>
+<span class="err">Finished trial number 450</span>
+<span class="err">Finished trial number 400</span>
+<span class="err">Simulation completed in 6.081968265 seconds</span>
+</code></pre></div>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../../demand/nb_reservation_price_demand/" title="Demand functions" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Demand functions
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../analysis/" title="Analysis" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Analysis
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../../assets/javascripts/vendor.d710d30a.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.7f4f3c92.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../../assets/javascripts/worker/search.9b3611bd.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="../../../javascripts/config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
