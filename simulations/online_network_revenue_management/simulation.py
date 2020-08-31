@@ -92,7 +92,7 @@ def beliefs() -> Beliefs:
 # %% [markdown]
 # ## Seller's optimization problem
 #
-# The process for the seller to determine which price set comprises three steps:
+# The process for the seller to determine which price to set comprises three steps:
 #
 # 1. Esimate the demand
 # 2. Given the demand estimates, comupte an optimal price mixture
@@ -166,10 +166,10 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
 #
 # We create the `ThrowAwayClass` because `find_optimal_price` is meant to be a method and takes an instance (usually denoted by `self` in Python) as its first argument.  To compute the optimal prices, we need the attribute `c` representing the ratio between the inventory and the periods in the selling season. 
 #
-# If we set the inventory to 1/4 of the selling season length, the optimal price is to choose \\$ 44.9 with probability 0.25 and \\$ 39.9 with probability 0.75. If we set it to 1/2, the optimal price is to choose \\$39.9 1/3 of the time and \\$34.9 the other 2/3. This illustrates the general tendency that *ceteris paribues*
+# If we set the inventory to 1/4 of the selling season length, the optimal price is to choose 44.9 with probability 0.25 and 39.9 with probability 0.75. If we set it to 1/2, the optimal price is to choose 39.9 1/3 of the time and 34.9 the other 2/3. This illustrates the general tendency that *ceteris paribus*:
 #
-# - if selling season becomes longer, the optimal price increase
-# - if the initial stock gets larger, the optimal price decreases
+# - the longer the selling season becomes, the higher the optimal price and
+# - the larger the initial stock, the lower the optimal price.
 
 # %%
 class ThrowAwayClass0:
@@ -229,7 +229,7 @@ class TSFixedSeller(Seller):
         demand = self._estimate_demand()
         prices = [belief.price for belief in self.beliefs]
 
-        opt_result = self._find_optimal_price(prices, demand)
+        self.opt_result = self._find_optimal_price(prices, demand)
 
         def sample_price(probs, prices) -> float:
             assert len(probs) == len(prices)
@@ -244,7 +244,7 @@ class TSFixedSeller(Seller):
             sampled_price = np.random.choice(prices, size=1, p=normalized_probs)
             return float(sampled_price)
 
-        chosen_price = sample_price(opt_result.x, prices)
+        chosen_price = sample_price(self.opt_result.x, prices)
 
         return chosen_price
 
@@ -309,8 +309,8 @@ def record_state(
     t: int, market: Market, seller: Seller, p: Price, q: Quantity
 ) -> Dict[str, Any]:
     
-    beliefs = {f"price_{b.price}": b.prior.expected_value for b in seller.beliefs}
-    return {"t": t, "price": p, "period_revenue": p * q, **beliefs}
+    beliefs = {f"belief_{b.price}": b.prior.expected_value for b in seller.beliefs}
+    return {"t": t, "price": p, "period_revenue": p * q, **beliefs, "price_mixture": seller.opt_result.x}
 
 ts_fixed = simulate(
     S=N_TRIALS,
@@ -335,10 +335,12 @@ def sample_optimal_price(_):
     prices = [29.9, 34.9, 39.9, 44.9]
     return float(np.random.choice(prices, size=1, p=probs))
 
+class ThrowAway2:
+    x = np.array([0, 0, 0.75, 0.25])
 
 ClairvoyantSeller = copy.deepcopy(TSFixedSeller)
 ClairvoyantSeller.choose_price = sample_optimal_price
-
+ClairvoyantSeller.opt_result = ThrowAway2()
 
 def clairvoyant_initialize_trial() -> Tuple[Market, Seller]:
     return (
