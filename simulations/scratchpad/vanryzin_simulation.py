@@ -31,7 +31,9 @@ def optimal_expected_revenue(stock, t):
 # %%
 def optimal_price(stock, t):
     return (
-        optimal_expected_revenue(stock, t) - optimal_expected_revenue(stock - 1, t) + 1
+        optimal_expected_revenue(stock, t)
+        - optimal_expected_revenue(stock - 1, t)
+        + 1
     )
 
 
@@ -110,4 +112,3 @@ plt.close()
 #     # Stock sells out before end of season
 #     if stock == 0:
 #         break
-

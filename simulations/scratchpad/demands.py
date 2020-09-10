@@ -31,7 +31,9 @@ import numpy as np
 import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-plt.style.use('seaborn-deep')
+
+plt.style.use("seaborn-deep")
+
 
 def price_strategy(day: int) -> float:
     return 30 if day <= 50 else 60
@@ -66,6 +68,7 @@ plt.ylabel("Realized Demand")
 # %%
 from math import exp, e, factorial, log
 
+
 def mean_demand(p):
     a = 20
     alpha = 1
@@ -76,13 +79,19 @@ def mean_demand(p):
 def optimal_expected_revenue(stock, t):
     a = 20
     lambda_star = 20 / e
-    s = sum((lambda_star * stock) ** i * 1 / factorial(i) for i in range(stock + 1))
+    s = sum(
+        (lambda_star * stock) ** i * 1 / factorial(i) for i in range(stock + 1)
+    )
     return log(s)
 
 
 # %%
 def optimal_price(stock, t):
-    return optimal_expected_revenue(stock, t) - optimal_expected_revenue(stock - 1, t) + 1
+    return (
+        optimal_expected_revenue(stock, t)
+        - optimal_expected_revenue(stock - 1, t)
+        + 1
+    )
 
 
 # %%
@@ -111,8 +120,8 @@ for s in range(100):
 
 results = pd.concat(results)
 
-results[['t', 'price']].plot()
-plt.savefig('price_development_bernoulli_approx.png')
+results[["t", "price"]].plot()
+plt.savefig("price_development_bernoulli_approx.png")
 
 # %%
 

@@ -73,12 +73,16 @@ def thompson(b: Belief) -> float:
 
 
 class BinomialSeller(Seller):
-    def __init__(self, beliefs: Beliefs, strategy: Callable[[Belief], float]) -> None:
+    def __init__(
+        self, beliefs: Beliefs, strategy: Callable[[Belief], float]
+    ) -> None:
         self.beliefs = beliefs
         self.strategy = strategy
 
     def choose_price(self) -> Price:
-        profit = [belief.price * self.strategy(belief) for belief in self.beliefs]
+        profit = [
+            belief.price * self.strategy(belief) for belief in self.beliefs
+        ]
         idx = profit.index(max(profit))
         return self.beliefs[idx].price
 

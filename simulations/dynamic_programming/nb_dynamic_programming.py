@@ -17,7 +17,7 @@
 # ## Dynamic pricing as a dynamic programming problem
 #
 # ## Intro
-# We present the basics of dynamic programming and frame the dynamic pricing as a dynamic programming problem. 
+# We present the basics of dynamic programming and frame the dynamic pricing as a dynamic programming problem.
 #
 # In its simplest form, dynamic programming problems consist of two principal features:
 #
@@ -57,7 +57,7 @@
 # - The random noise $w_k$ is the demand.
 #
 # \begin{equation}
-#    x_{k+1} = f(x_k, u_k, w_k) = 
+#    x_{k+1} = f(x_k, u_k, w_k) =
 #     \begin{cases}
 #         x_k - 1 & \text{if $w_k = 1$ }\\
 #         x_k & \text{if $w_k = 0$ }\\
@@ -73,12 +73,14 @@
 import random
 import numpy as np
 
-stock = 10 # Initial stock
+stock = 10  # Initial stock
+
 
 def pick_strategy():
     if random.random() > 0.5:
         return 5
     return 10
+
 
 def demand(p):
     mapping = {5: 0.7, 10: 0.3, np.inf: 0}
@@ -90,6 +92,7 @@ def demand(p):
     if random.random() > prob:
         return 0
     return 1
+
 
 for _ in range(40):
     if stock > 0:

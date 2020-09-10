@@ -17,7 +17,8 @@
 
 # %%
 import warnings
-warnings.filterwarnings('ignore')
+
+warnings.filterwarnings("ignore")
 
 # %%
 import numpy as np
@@ -47,11 +48,15 @@ def simulate_wip():
 
     wips = pd.concat(
         [
-            pd.DataFrame({"wip": np.random.exponential(β_lo, n_lo), "group": "low"}),
-            pd.DataFrame({"wip": np.random.exponential(β_hi, n_hi), "group": "high"}),
+            pd.DataFrame(
+                {"wip": np.random.exponential(β_lo, n_lo), "group": "low"}
+            ),
+            pd.DataFrame(
+                {"wip": np.random.exponential(β_hi, n_hi), "group": "high"}
+            ),
         ]
     )
-    
+
     return wips
 
 
@@ -65,35 +70,38 @@ def demand_fn(wip, prices):
     # Demand q for price p
     q = lambda wip, p: (wip["wip"] > p).sum()
     pq_pairs = [(p, q(wip, p)) for p in prices]
-    return pd.DataFrame(pq_pairs, columns=["p", "q"]) 
+    return pd.DataFrame(pq_pairs, columns=["p", "q"])
 
-curves = [demand_fn(wip, range(0, 100, 2))for wip in wips] 
+
+curves = [demand_fn(wip, range(0, 100, 2)) for wip in wips]
 
 # %%
 demand_curve = ggplot()
 
 for curve in curves:
     demand_curve += geom_line(curve, aes("p", "q"), alpha=0.1)
-    
+
 demand_curve = (
-    demand_curve 
-    + labs(y='Quantity q', x='Price p')
+    demand_curve
+    + labs(y="Quantity q", x="Price p")
     + theme(text=element_text(size=8))
 )
 
-demand_curve.save(FIGS_DIR / 'wip_demand.png', dpi=300, height=3, width=3)
+demand_curve.save(FIGS_DIR / "wip_demand.png", dpi=300, height=3, width=3)
 demand_curve
 
 # %%
 all_wips = pd.concat(wips)
-pt99 = np.percentile(all_wips['wip'], 99)
+pt99 = np.percentile(all_wips["wip"], 99)
 
 wip_distribution = (
     ggplot(pd.concat(wips), aes(x="wip", fill="group"))
     + geom_histogram(position="identity", bins=80, alpha=0.5)
-    + labs(y='Count', x='Willigness to Pay', fill="")
-    + xlim((0, pt99)) + 
-    theme(text=element_text(size=8), legend_position="none")
+    + labs(y="Count", x="Willigness to Pay", fill="")
+    + xlim((0, pt99))
+    + theme(text=element_text(size=8), legend_position="none")
 )
-wip_distribution.save(FIGS_DIR / 'wip_distribution.png', dpi=300, height=3, width=3)
+wip_distribution.save(
+    FIGS_DIR / "wip_distribution.png", dpi=300, height=3, width=3
+)
 wip_distribution

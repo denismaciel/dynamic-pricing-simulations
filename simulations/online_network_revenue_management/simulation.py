@@ -104,6 +104,7 @@ def beliefs() -> Beliefs:
 def thompson(b: Belief) -> float:
     return b.prior.sample()  # type: ignore
 
+
 def greedy(b: Belief) -> float:
     return b.prior.expected_value  # type: ignore
 
@@ -156,7 +157,9 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
         lhs_ineq.append(lhs)
         rhs_ineq.append(rhs)
 
-    opt = linprog(c=objective, A_ub=lhs_ineq, b_ub=rhs_ineq, method="revised simplex")
+    opt = linprog(
+        c=objective, A_ub=lhs_ineq, b_ub=rhs_ineq, method="revised simplex"
+    )
 
     return opt
 
@@ -164,7 +167,7 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
 # %% [markdown]
 # The solution to the optimization problem of a clairvoyant seller (a seller that knows the actual underlying demand probabilities from the start) is shown below.
 #
-# We create the `ThrowAwayClass` because `find_optimal_price` is meant to be a method and takes an instance (usually denoted by `self` in Python) as its first argument.  To compute the optimal prices, we need the attribute `c` representing the ratio between the inventory and the periods in the selling season. 
+# We create the `ThrowAwayClass` because `find_optimal_price` is meant to be a method and takes an instance (usually denoted by `self` in Python) as its first argument.  To compute the optimal prices, we need the attribute `c` representing the ratio between the inventory and the periods in the selling season.
 #
 # If we set the inventory to 1/4 of the selling season length, the optimal price is to choose 44.9 with probability 0.25 and 39.9 with probability 0.75. If we set it to 1/2, the optimal price is to choose 39.9 1/3 of the time and 34.9 the other 2/3. This illustrates the general tendency that *ceteris paribus*:
 #
@@ -175,8 +178,10 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
 class ThrowAwayClass0:
     c = 0.25
 
+
 class ThrowAwayClass1:
     c = 0.5
+
 
 demand = [pl.true_prob for pl in price_levels]  # true probabilities
 price = [pl.price for pl in price_levels]
@@ -206,7 +211,7 @@ for p, prob in zip(price, opt_result.x):
 # - the initial inventory
 # - and the length of the season
 #
-# With this information, the seller is now ready to interact with the environment. At every period, the interaction takes place via two actions: setting a price (`TSFixedSeller.choose_price`) and observing the realized demand (`TSFixedSeller.observe_demand`). 
+# With this information, the seller is now ready to interact with the environment. At every period, the interaction takes place via two actions: setting a price (`TSFixedSeller.choose_price`) and observing the realized demand (`TSFixedSeller.observe_demand`).
 #
 # The price-setting is the result ofestimating the demand via Thompson sampling (`TSFixedSeller._estimate_demand`), passing the estimated demans through the optimizer (`TSFixedSeller._find_optimal_price`) and finally sampling one price out of the distribution given by the optimizer.
 #
@@ -288,7 +293,7 @@ class BernoulliMarket(Market):
 N_TRIALS = 500
 N_PERIODS = 500
 alpha = 0.25
-INVENTORY = alpha*N_PERIODS
+INVENTORY = alpha * N_PERIODS
 
 
 # %% [markdown]
@@ -305,12 +310,22 @@ def initialize_trial() -> Tuple[Market, Seller]:
         TSFixedSeller(beliefs(), thompson, INVENTORY, N_PERIODS,),
     )
 
+
 def record_state(
     t: int, market: Market, seller: Seller, p: Price, q: Quantity
 ) -> Dict[str, Any]:
-    
-    beliefs = {f"belief_{b.price}": b.prior.expected_value for b in seller.beliefs}
-    return {"t": t, "price": p, "period_revenue": p * q, **beliefs, "price_mixture": seller.opt_result.x}
+
+    beliefs = {
+        f"belief_{b.price}": b.prior.expected_value for b in seller.beliefs
+    }
+    return {
+        "t": t,
+        "price": p,
+        "period_revenue": p * q,
+        **beliefs,
+        "price_mixture": seller.opt_result.x,
+    }
+
 
 ts_fixed = simulate(
     S=N_TRIALS,
@@ -320,7 +335,9 @@ ts_fixed = simulate(
 
 from dynpric.simulation_engine import flatten_results
 
-flatten_results(ts_fixed).to_parquet(f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet")
+flatten_results(ts_fixed).to_parquet(
+    f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
+)
 
 
 # %% [markdown]
@@ -335,12 +352,15 @@ def sample_optimal_price(_):
     prices = [29.9, 34.9, 39.9, 44.9]
     return float(np.random.choice(prices, size=1, p=probs))
 
+
 class ThrowAway2:
     x = np.array([0, 0, 0.75, 0.25])
+
 
 ClairvoyantSeller = copy.deepcopy(TSFixedSeller)
 ClairvoyantSeller.choose_price = sample_optimal_price
 ClairvoyantSeller.opt_result = ThrowAway2()
+
 
 def clairvoyant_initialize_trial() -> Tuple[Market, Seller]:
     return (
