@@ -34,7 +34,9 @@ def project_root_dir() -> Path:
     p_origin = p = Path().absolute()
     while True:
         if p == Path("/"):
-            raise FileNotFoundError(f"Could not find project root dir from {p_origin}")
+            raise FileNotFoundError(
+                f"Could not find project root dir from {p_origin}"
+            )
         if p / Path(".git") in p.iterdir():
             return p.absolute()
         p = p.parent.absolute()

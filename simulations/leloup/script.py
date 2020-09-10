@@ -14,6 +14,7 @@ from pathlib import Path
 
 figs_folder = Path().absolute() / "figs" / "leloup"
 
+
 class BetaParams(NamedTuple):
     """
     Parameters of the Beta distribution
@@ -71,7 +72,9 @@ def mean_beta(params: BetaParams):
 
 
 def calculate_expected_profit(
-    pl: PriceLevel, expected_probability: Callable[[BetaParams], float], cost: float
+    pl: PriceLevel,
+    expected_probability: Callable[[BetaParams], float],
+    cost: float,
 ):
     return pl.price * expected_probability(pl.params) - cost
 
@@ -122,7 +125,9 @@ def run_simulation(
     return company_actions
 
 
-def reshape_simulation_result(result: List[List[int]], size: int) -> pd.DataFrame:
+def reshape_simulation_result(
+    result: List[List[int]], size: int
+) -> pd.DataFrame:
 
     series = [pd.Series(p_chosen) for p_chosen in result]
     series = pd.concat(series)

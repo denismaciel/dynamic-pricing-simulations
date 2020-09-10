@@ -36,7 +36,9 @@ FIGS_DIR = project_root_dir() / "figs"
 
 
 # Read in simulation data
-ts_fixed = pd.read_parquet(f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet")
+ts_fixed = pd.read_parquet(
+    f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
+)
 clairvoyant = pd.read_parquet(
     f"data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
 )
@@ -53,9 +55,9 @@ clairvoyant = pd.read_parquet(
 # %% [markdown]
 # ## Revenue
 #
-# We look at the revenue achieved by the seller at period t averaged across all trials. The red straight line shows the average revenue achieved by a clairvoyant seller, whereas the wiggly black line shows the average revenue for each period achieved by TS-fixed. 
+# We look at the revenue achieved by the seller at period t averaged across all trials. The red straight line shows the average revenue achieved by a clairvoyant seller, whereas the wiggly black line shows the average revenue for each period achieved by TS-fixed.
 #
-# In the first periods, the seller makes around half the revenue that a clairvoyant would make. It takes her around 150 periods (roughly 30% of the selling season) to achieve the revenue level of the clairvoyant. From then on, the revenue stabilizes and fluctuates around the 10 dollar mark.  
+# In the first periods, the seller makes around half the revenue that a clairvoyant would make. It takes her around 150 periods (roughly 30% of the selling season) to achieve the revenue level of the clairvoyant. From then on, the revenue stabilizes and fluctuates around the 10 dollar mark.
 
 # %%
 revenue = ts_fixed.groupby("t").period_revenue.mean()
@@ -99,7 +101,10 @@ pricing_strategy = (
 )
 
 pricing_strategy.save(
-    FIGS_DIR / "online_net_pricing_strategy_over_time.png", dpi=300, height=3.3, width=5
+    FIGS_DIR / "online_net_pricing_strategy_over_time.png",
+    dpi=300,
+    height=3.3,
+    width=5,
 )
 
 pricing_strategy
@@ -139,7 +144,7 @@ belief_development = (
     + labs(y="Probability")
     + lims(y=(0, 1))
     + facet_wrap("price")
-    + theme(legend_position = "none")
+    + theme(legend_position="none")
 )
 
 belief_development.save(

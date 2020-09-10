@@ -48,13 +48,13 @@ notebooks = [
     "simulations/online_network_revenue_management/simulation",
     "simulations/online_network_revenue_management/analysis",
     "simulations/thompson_sampling/nb_thompson_vs_greedy",
-
 ]
+
 
 def make_markdown(path, execute=False):
     notebook_path = Path(path + ".ipynb").absolute()
     if not notebook_path.exists():
-        raise FileNotFoundError(f'Notebook {path} does not exist')
+        raise FileNotFoundError(f"Notebook {path} does not exist")
     parent = notebook_path.absolute().parent.stem
     output_dir = root.absolute() / "docs" / "notebooks" / parent
     execute = "--execute" if execute else ""
@@ -72,5 +72,3 @@ def make_markdown(path, execute=False):
 
 for n in notebooks:
     make_markdown(n, execute=False)
-
-

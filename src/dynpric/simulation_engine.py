@@ -36,10 +36,12 @@ def trial_factory(
     initializer: Callable[[], Tuple[Market, Seller]],
     state_recorder: Callable[[int, Market, Seller, Price, Quantity], Dict],
 ) -> Callable[[int, int], Dict]:
-    return partial(run_trial, initializer=initializer, state_recorder=state_recorder)
+    return partial(
+        run_trial, initializer=initializer, state_recorder=state_recorder
+    )
 
 
-def simulate(S: int, T: int, trial_runner: Callable, execution_mode='parallel'):
+def simulate(S: int, T: int, trial_runner: Callable, execution_mode="parallel"):
     """
     S: number of trials for the simulation
     T: number of time periods each trial has
@@ -49,10 +51,12 @@ def simulate(S: int, T: int, trial_runner: Callable, execution_mode='parallel'):
 
     REPORTING_FREQUENCY = S // 10
 
-    if execution_mode == 'parallel':
+    if execution_mode == "parallel":
         pool = multiprocessing.Pool(processes=os.cpu_count())
-        result = pool.starmap(trial_runner, product(range(S), [T], [REPORTING_FREQUENCY]))
-    elif execution_mode == 'sequential':
+        result = pool.starmap(
+            trial_runner, product(range(S), [T], [REPORTING_FREQUENCY])
+        )
+    elif execution_mode == "sequential":
         result = [trial_runner(s, T, REPORTING_FREQUENCY) for s in range(S)]
 
     end = time.perf_counter()
