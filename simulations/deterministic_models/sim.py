@@ -141,12 +141,71 @@ def demand_factory(n: int):
     # Derivative of the revenue function r = p (a + b * p)
     # will be J = a + 2*b*p
 
-    # Inverse demand form  p(q) = b - aq
-    # Revenue function     r(q) = q*p(q) = bq - aq^2
-    # Marginal revenue     J(q) = b - 2qavim
+    # Inverse demand form  p(q) = a - bq
+    # Revenue function     r(q) = q*p(q) = aq - bq^2
+    # Marginal revenue     J(q) = a - 2qb
 
     for _ in range(n):
         print(_)
 
-
 demand_factory(5)
+
+# %%
+import random
+
+Price = float
+Quantity = int
+Money = float
+
+class LinearDemand:
+    """
+    Demand function of the form: q(p) = a - b*p
+    
+        Inverse demand:   p(q)  = (a - q)/b
+        Marginal revenue: mr(q) = (a - 2q)/b
+        Revenue:          r(q)  = p(q)*(q)
+    """
+    def __init__(self, a: int, b: int):
+        self.a = a
+        self.b = b
+        
+    def demand(self, q):
+        return self.a - q * self.b
+    
+    def inverse_demand(self, q: Quantity) -> Price:
+        return (self.a - q) / self.b
+
+    def marginal_revenue(self, q: Quantity) -> Money:
+        return (self.a - 2*q) / self.b
+
+    def revenue(self, q: Quantity) -> Money:
+        return q * self.inverse_demand(q)
+    
+    def __repr__(self):
+        return f"LinearDemand({self.a}, {self.b})"
+
+
+# def marginal_revenue_factory(a, b):
+#     def marginal_revenue(q):
+#         return a - 2 * q * b
+#     return marginal_revenue
+
+
+season = []
+for _ in range(10):
+    a = random.randint(100, 200)
+    b = random.randint(5, 20)
+    demand = LinearDemand(a, b)
+    season.append(demand)
+    
+plot = ggplot()
+for t in season:
+    p = np.arange(1, 10)
+    q = t.demand(np.arange(1, 10))
+    df = pd.DataFrame({'p': p, 'q': q})
+    plot += geom_line(df, aes(x = 'p', y = 'q'))
+
+# %%
+plot
+
+# %%
