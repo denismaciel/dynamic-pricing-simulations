@@ -56,7 +56,7 @@
 # %% [markdown]
 # where $\pi^*$ is the Lagrange multiplier on the inventory constraint.
 #
-# $\pi^*$ can be interpreted as the **marginal opportunity cost of capacity**. For every inventory unit allocated to period $t$, there is an associated opportunity cost of capacity, which is the extra revenue that such a unit would generate if it were allocated to another period $t + x$. Ultimately, for an inventory allocation to be optimial, the marginal revenue must be equal across all periods. If that is not the case for a specific allocation, the seller can always increase her revenue by moving one unit from a period with lower to a period with higher marginal revenue. It is also interesting to notice that the optimality condition states that the marginal revenue must equal the marginal opportunity cost of capacity. This is equivalent to the previous statemet that marginal revenue must be equal across all time periods. The marginal opportunity cost of capacity of period $t$ is given by the marginal revenue the other periods.
+# $\pi^*$ can be interpreted as the **marginal opportunity cost of capacity**. For every inventory unit allocated to period $t$, there is an associated opportunity cost of capacity, which is the extra revenue that such a unit would generate if it were allocated to another period $t + x$. Ultimately, for an inventory allocation to be optimal, the marginal revenue must be equal across all periods. Suppose that is not the case for a specific allocation. In that case, the seller can always increase her revenue by moving one unit from a period with lower to a period with higher marginal revenue. It is also interesting to notice that the optimality condition states that the marginal revenue must equal the marginal opportunity cost of capacity. This is equivalent to the previous statement that marginal revenue must be equal across all time periods. The marginal opportunity cost of capacity of period $t$ is given by the marginal revenue the other periods.
 
 # %% [markdown]
 # ## A numerical example
@@ -67,6 +67,13 @@
 # r_1 = p_1(-p_1 + 100)   \rightarrow p_1^* = 50, q_1^* = 50   \\
 # r_2 = p_2 (-2p_2 + 120) \rightarrow p_2^* = 30, q_2^* = 60
 # \end{equation}
+
+# %%
+import warnings
+from dynpric.notebook import project_root_dir
+
+FIGS_DIR = project_root_dir() / "figs"
+warnings.filterwarnings("ignore")
 
 # %%
 import numpy as np
@@ -90,16 +97,14 @@ J1 = lambda q: -2 * q + 100
 J2 = lambda q: -q + 60
 
 # %% [markdown]
-# Let $C = 40$ be the seller's inventory. Now the seller faces a binding constraint and needs to decide how to allocate the 40 units among the two periods. For such a simple problem, we just need to plug in all possible combinations of stock allocations and check which one yields the highest overall revenue. The optimal solution is to allocate 27 units to period 1 (which have less price sensitive customers) and 13 units to period 2. Note that the optimal allocation happens at the point where the marginal revenue of both periods are the closest.
+# Let $C = 40$ be the seller's inventory. Now the seller faces a binding constraint and needs to decide how to allocate the 40 units among the two periods. To find the optimal solution for such a simple problem, it is trivial to plug in all possible combinations of stock allocations and check which one yields the highest revenue. As shown in table below, the optimal solution is to allocate 27 units to period 1 (which has less price sensitive customers) and 13 units to period 2. Note that the optimal allocation happens at the point where the marginal revenue of both periods are the closest confirming the analytical solution of the optimization problem above.
 
 # %%
 C = 40
 
 df = pd.DataFrame({"q1": np.arange(C + 1)})
 df["q2"] = C - df["q1"]
-df["revenue"] = df.apply(
-    lambda row: r1(p1(row["q1"])) + r2(p2(row["q2"])), axis=1
-)
+df["revenue"] = df.apply(lambda row: r1(p1(row["q1"])) + r2(p2(row["q2"])), axis=1)
 df["J1"] = J1(df["q1"])
 df["J2"] = J2(df["q2"])
 
@@ -111,11 +116,12 @@ df["revenue"] = df["revenue"] / 10
 df["J1"] = df["J1"]
 df["J2"] = df["J2"]
 
-
+# %%
+# Find q1 that yields highest revenue
 boo = df["revenue"] == df["revenue"].max()
 q1_max = df[boo]["q1"]
 
-(
+plot = (
     ggplot(df, aes(x="q1", y="revenue"))
     + geom_line()
     + geom_line(aes(y="J1"))
@@ -125,37 +131,38 @@ q1_max = df[boo]["q1"]
         x=(10, 10, 10),
         y=(90, 40, 235),
         label=("Marginal Rev 1", "Marginal Rev 2", "Total Revenue"),
-        size=10,
+        size=8,
         angle=(-13, 6, 30),
     )
     + geom_vline(xintercept=q1_max, color="red")
-    + labs(y="(Marginal) Revenue", x="Inventory Offered in Period 1")
-    + theme_minimal()
+    + labs(y="(Marginal) Revenue", x="Inventory allocated to period 1", size=8)
+    + theme_light()
+    + theme(
+        axis_title_x=element_text(size=9),
+        axis_title_y=element_text(size=9),
+        axis_text_y=element_blank(),
+#         axis_text=element_blank(),
+    )
 )
+plot.save(FIGS_DIR / "two_period_marginal_revenue.png", dpi=300, height=3.5, width=4)
+plot
 
-
-# %%
-def demand_factory(n: int):
-
-    # Demand form is a + b * p
-    # Derivative of the revenue function r = p (a + b * p)
-    # will be J = a + 2*b*p
-
-    # Inverse demand form  p(q) = a - bq
-    # Revenue function     r(q) = q*p(q) = aq - bq^2
-    # Marginal revenue     J(q) = a - 2qb
-
-    for _ in range(n):
-        print(_)
-
-demand_factory(5)
+# %% [markdown]
+# ## Solving the allocation problem algorithmically
+#
+# We now simulate a 10-period sales season with linear demands and propose an algorithm to optimally allocate inventory across those periods. The demand function for all periods have the form $q(p) = \alpha - \beta p$. For each period, the intercept $\alpha$ is sampled from the set of integers within the interval $[100, 200]$ with equal probability. Likewise, the slope $\beta$ is sampled from the set of integer $[5, 20]$. Inventory is set to 500 units.
+#
+# The demand function for each period is represented by `LinearDemand`.
 
 # %%
 import random
 
+random.seed(123)
+
 Price = float
 Quantity = int
 Money = float
+
 
 class LinearDemand:
     """
@@ -165,47 +172,140 @@ class LinearDemand:
         Marginal revenue: mr(q) = (a - 2q)/b
         Revenue:          r(q)  = p(q)*(q)
     """
+
     def __init__(self, a: int, b: int):
         self.a = a
         self.b = b
-        
-    def demand(self, q):
-        return self.a - q * self.b
-    
-    def inverse_demand(self, q: Quantity) -> Price:
+        self.q = 0
+
+    def demand(self, p: Price) -> Quantity:
+        return self.a - p * self.b
+
+    def inverse_demand(self, q: Quantity = None) -> Price:
+        if q is None:
+            q = self.q
         return (self.a - q) / self.b
 
-    def marginal_revenue(self, q: Quantity) -> Money:
-        return (self.a - 2*q) / self.b
+    def marginal_revenue(self, q: Quantity = None) -> Money:
+        if q is None:
+            q = self.q
+        return (self.a - 2 * q) / self.b
 
-    def revenue(self, q: Quantity) -> Money:
+    def revenue(self, q: Quantity = None) -> Money:
+        if q is None:
+            q = self.q
         return q * self.inverse_demand(q)
-    
+
+    def allocate_inventory(self, i: Quantity) -> None:
+        self.q += i
+
     def __repr__(self):
-        return f"LinearDemand({self.a}, {self.b})"
+        return (
+            f"LinearDemand(a={self.a}, b={self.b}, q={self.q}) "
+            f"| Marginal Revenue: {self.marginal_revenue()}"
+        )
 
 
-# def marginal_revenue_factory(a, b):
-#     def marginal_revenue(q):
-#         return a - 2 * q * b
-#     return marginal_revenue
+# %% [markdown]
+# Sample demamd functions for the 10 periods.
+
+# %%
+def sample_demands(n_periods):
+    season = []
+    for _ in range(n_periods):
+        a = random.randint(100, 200)
+        b = random.randint(5, 20)
+        demand = LinearDemand(a, b)
+        season.append(demand)
+    return season
 
 
-season = []
-for _ in range(10):
-    a = random.randint(100, 200)
-    b = random.randint(5, 20)
-    demand = LinearDemand(a, b)
-    season.append(demand)
-    
+# %% [markdown]
+# The plot below depicts the demand functions for all 10 periods. As one can see, there is a great amount of variation across periods, which makes the brute-force approach to finding the optimal allocation less suitable.
+
+# %%
+# Generate a demand function for each of the 10 periods
+season = sample_demands(10)
+
 plot = ggplot()
 for t in season:
     p = np.arange(1, 10)
-    q = t.demand(np.arange(1, 10))
-    df = pd.DataFrame({'p': p, 'q': q})
-    plot += geom_line(df, aes(x = 'p', y = 'q'))
-
-# %%
+    q = t.demand(p)
+    df = pd.DataFrame({"p": p, "q": q})
+    df = df[df["q"] >= 0]
+    plot += geom_line(df, aes(x="p", y="q"), alpha=0.5)
+plot += labs(x="Price", y="Quantity")
+plot += theme_light()
+plot += theme(axis_title_x=element_text(size=9), axis_title_y=element_text(size=9),)
 plot
 
+# Save plot
+plot.save(FIGS_DIR / "deterministic_demands.png", dpi=300, height=3, width=4)
+
+plot
+
+# %% [markdown]
+# To allocate the inventory and achieve the highest possible revenue, the seller can follow a relatively simple algorithm.
+#
+# 1. Find the period with highest marginal revenue.
+# 2. If its marginal revenue is greater than zero, allocate one unit of inventory to it. Else, stop the algorithm.
+# 3. Check if there is still invenotry left. If yes, return to 1. Else, stop the algorithm.
+
 # %%
+season = sample_demands(10) 
+
+def allocate_inventory(season, inventory: int):
+    remaining = inventory
+
+    for _ in range(inventory):
+        marginal_revenues = [d.marginal_revenue() for d in season]
+        max_ = max(marginal_revenues)
+    
+        if max_ > 0:
+            idx = marginal_revenues.index(max_)
+            season[idx].allocate_inventory(1)
+            remaining -= 1
+        else:
+            break
+    return season, remaining
+
+INVENTORY = 500
+season, remaining = allocate_inventory(season, INVENTORY)
+
+# %%
+print(remaining)
+
+# %%
+final_allocation = pd.DataFrame([
+    {
+        "Period": t,
+        "Alpha": d.a,
+        "Beta": d.b,
+        "Marginal Revenue": round(d.marginal_revenue(), 2),
+        "Allocated Quantity": d.q,
+    }
+    for t, d in enumerate(season)
+])
+final_allocation
+
+# %%
+plot = ggplot()
+q = np.arange(1, 200)
+
+for d in season:
+    revenue = d.revenue(q)
+    df = pd.DataFrame({'q': q, 'revenue': revenue})
+    df = df[df['revenue'] > 0]
+    plot += geom_line(df, aes(x = 'q', y = 'revenue'),  alpha=0.5)
+    
+    allocated_q = pd.DataFrame({
+        'q': [d.q],
+        'revenue': [d.revenue()]
+    })
+    plot += geom_point(allocated_q, aes(x='q', y='revenue'))
+
+plot += labs(x="Quantity", y="Revenue")
+plot += theme_light()
+
+plot.save(FIGS_DIR / "deterministic_revenue.png", dpi=300, height=3, width=4)
+plot
