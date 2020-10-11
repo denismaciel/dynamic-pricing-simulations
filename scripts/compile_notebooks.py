@@ -48,6 +48,7 @@ notebooks = [
     "simulations/online_network_revenue_management/simulation",
     "simulations/online_network_revenue_management/analysis",
     "simulations/thompson_sampling/nb_thompson_vs_greedy",
+    "simulations/deterministic_models/sim",
 ]
 
 
@@ -71,4 +72,4 @@ def make_markdown(path, execute=False):
 
 
 for n in notebooks:
-    make_markdown(n, execute=False)
+    make_markdown(n, execute=True)
