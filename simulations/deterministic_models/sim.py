@@ -104,7 +104,9 @@ C = 40
 
 df = pd.DataFrame({"q1": np.arange(C + 1)})
 df["q2"] = C - df["q1"]
-df["revenue"] = df.apply(lambda row: r1(p1(row["q1"])) + r2(p2(row["q2"])), axis=1)
+df["revenue"] = df.apply(
+    lambda row: r1(p1(row["q1"])) + r2(p2(row["q2"])), axis=1
+)
 df["J1"] = J1(df["q1"])
 df["J2"] = J2(df["q2"])
 
@@ -141,10 +143,12 @@ plot = (
         axis_title_x=element_text(size=9),
         axis_title_y=element_text(size=9),
         axis_text_y=element_blank(),
-#         axis_text=element_blank(),
+        #         axis_text=element_blank(),
     )
 )
-plot.save(FIGS_DIR / "two_period_marginal_revenue.png", dpi=300, height=3.5, width=4)
+plot.save(
+    FIGS_DIR / "two_period_marginal_revenue.png", dpi=300, height=3.5, width=4
+)
 plot
 
 # %% [markdown]
@@ -236,7 +240,9 @@ for t in season:
     plot += geom_line(df, aes(x="p", y="q"), alpha=0.5)
 plot += labs(x="Price", y="Quantity")
 plot += theme_light()
-plot += theme(axis_title_x=element_text(size=9), axis_title_y=element_text(size=9),)
+plot += theme(
+    axis_title_x=element_text(size=9), axis_title_y=element_text(size=9),
+)
 plot
 
 # Save plot
@@ -252,7 +258,8 @@ plot
 # 3. Check if there is still invenotry left. If yes, return to 1. Else, stop the algorithm.
 
 # %%
-season = sample_demands(10) 
+season = sample_demands(10)
+
 
 def allocate_inventory(season, inventory: int):
     remaining = inventory
@@ -260,7 +267,7 @@ def allocate_inventory(season, inventory: int):
     for _ in range(inventory):
         marginal_revenues = [d.marginal_revenue() for d in season]
         max_ = max(marginal_revenues)
-    
+
         if max_ > 0:
             idx = marginal_revenues.index(max_)
             season[idx].allocate_inventory(1)
@@ -269,6 +276,7 @@ def allocate_inventory(season, inventory: int):
             break
     return season, remaining
 
+
 INVENTORY = 500
 season, remaining = allocate_inventory(season, INVENTORY)
 
@@ -276,16 +284,18 @@ season, remaining = allocate_inventory(season, INVENTORY)
 print(remaining)
 
 # %%
-final_allocation = pd.DataFrame([
-    {
-        "Period": t,
-        "Alpha": d.a,
-        "Beta": d.b,
-        "Marginal Revenue": round(d.marginal_revenue(), 2),
-        "Allocated Quantity": d.q,
-    }
-    for t, d in enumerate(season)
-])
+final_allocation = pd.DataFrame(
+    [
+        {
+            "Period": t,
+            "Alpha": d.a,
+            "Beta": d.b,
+            "Marginal Revenue": round(d.marginal_revenue(), 2),
+            "Allocated Quantity": d.q,
+        }
+        for t, d in enumerate(season)
+    ]
+)
 final_allocation
 
 # %%
@@ -294,15 +304,12 @@ q = np.arange(1, 200)
 
 for d in season:
     revenue = d.revenue(q)
-    df = pd.DataFrame({'q': q, 'revenue': revenue})
-    df = df[df['revenue'] > 0]
-    plot += geom_line(df, aes(x = 'q', y = 'revenue'),  alpha=0.5)
-    
-    allocated_q = pd.DataFrame({
-        'q': [d.q],
-        'revenue': [d.revenue()]
-    })
-    plot += geom_point(allocated_q, aes(x='q', y='revenue'))
+    df = pd.DataFrame({"q": q, "revenue": revenue})
+    df = df[df["revenue"] > 0]
+    plot += geom_line(df, aes(x="q", y="revenue"), alpha=0.5)
+
+    allocated_q = pd.DataFrame({"q": [d.q], "revenue": [d.revenue()]})
+    plot += geom_point(allocated_q, aes(x="q", y="revenue"))
 
 plot += labs(x="Quantity", y="Revenue")
 plot += theme_light()
