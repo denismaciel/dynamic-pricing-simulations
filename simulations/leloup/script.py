@@ -1,9 +1,11 @@
 import random
-from typing import NamedTuple, Callable, List
+from typing import Callable
+from typing import List
+from typing import NamedTuple
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 beta = 0.99  # discount factor
 epsilon = 20  # miminal unitary return

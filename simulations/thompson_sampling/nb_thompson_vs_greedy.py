@@ -13,18 +13,24 @@
 #     language: python
 #     name: python3
 # ---
-
 # %%
 import random
-from typing import NamedTuple, List, Callable, Dict, Any, Tuple
 import time
+from typing import Any
+from typing import Callable
+from typing import Dict
+from typing import List
+from typing import NamedTuple
+from typing import Tuple
 
 import pandas as pd
-
-from dynpric.seller import Seller
-from dynpric.market import Market, Price, Quantity
+from dynpric.market import Market
+from dynpric.market import Price
+from dynpric.market import Quantity
 from dynpric.priors import BetaPrior
-from dynpric.simulation_engine import simulate, trial_factory
+from dynpric.seller import Seller
+from dynpric.simulation_engine import simulate
+from dynpric.simulation_engine import trial_factory
 
 
 class PriceLevel(NamedTuple):

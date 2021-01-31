@@ -14,7 +14,6 @@
 #     language: python
 #     name: python3
 # ---
-
 # %%
 import warnings
 
@@ -65,7 +64,7 @@ wips = [simulate_wip() for _ in range(50)]
 
 # %%
 def demand_fn(wip, prices):
-    """Calculates the demand for every price point in `prices` 
+    """Calculates the demand for every price point in `prices`
     """
     # Demand q for price p
     q = lambda wip, p: (wip["wip"] > p).sum()

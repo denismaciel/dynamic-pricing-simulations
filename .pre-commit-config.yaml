@@ -6,7 +6,6 @@ repos:
     -   id: check-json
     -   id: check-yaml
     -   id: debug-statements
-    -   id: flake8
     -   id: trailing-whitespace
 
 -   repo: https://github.com/asottile/reorder_python_imports

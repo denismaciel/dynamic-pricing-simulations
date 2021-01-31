@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # %% [markdown]
 # # Online Network Revenue Management
-
 # %% [markdown]
 # Below is the implementation of the TS-Fixed algorithm described in **Ferreira, Kris Johnson, David Simchi-Levi, and He Wang. “Online Network Revenue Management Using Thompson Sampling”**
-
 # %% [markdown]
 # # Setup
 #
@@ -24,20 +22,26 @@
 # We will see later that, despite this rather unreasonable priors, the seller ends up learning the true demand parameters quite accurately.
 #
 # Now to the code. We start with the necessary imports.
-
 # %%
-import random
 import copy
-from typing import List, NamedTuple, Tuple, Iterable, Dict, Any
+import random
+from typing import Any
+from typing import Dict
+from typing import Iterable
+from typing import List
+from typing import NamedTuple
+from typing import Tuple
 
 import numpy as np
+from dynpric.market import Market
+from dynpric.market import Price
+from dynpric.market import Quantity
+from dynpric.priors import BetaPrior
+from dynpric.seller import Seller
+from dynpric.simulation_engine import simulate
+from dynpric.simulation_engine import trial_factory
 from scipy.optimize import linprog
 from scipy.optimize.optimize import OptimizeResult
-
-from dynpric.market import Market, Price, Quantity
-from dynpric.seller import Seller
-from dynpric.priors import BetaPrior
-from dynpric.simulation_engine import simulate, trial_factory
 
 
 # %% [markdown]

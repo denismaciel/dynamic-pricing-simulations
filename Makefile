@@ -11,3 +11,9 @@ nb-sync-notebooks:
 nb-make-markdown:
 	rm -rf docs/notebooks/*
 	./scripts/compile_notebooks.py make_markdown
+
+install-dev-dependencies:
+	pip install pip-tools
+	pip-sync requirements.txt
+	pip install -Ie .
+	pre-commit install

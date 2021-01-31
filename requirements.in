@@ -14,4 +14,4 @@ black
 flake8
 mypy
 pytest
-rope
+pre-commit

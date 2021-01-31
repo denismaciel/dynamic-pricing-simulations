@@ -12,7 +12,6 @@
 #     language: python
 #     name: python3
 # ---
-
 # %% [markdown]
 # ## Dynamic pricing as a dynamic programming problem
 #
@@ -48,7 +47,6 @@
 # \end{equation}
 #
 # where $g_N(x_N)$ is the final cost occured right at the very end of the process.
-
 # %% [markdown]
 # ## Pricing as a dynamic programming problem
 #
@@ -63,14 +61,13 @@
 #         x_k & \text{if $w_k = 0$ }\\
 #     \end{cases}
 # \end{equation}
-
 # %% [markdown]
 # ## Cost function
 #
 # $g_k = $
-
 # %%
 import random
+
 import numpy as np
 
 stock = 10  # Initial stock

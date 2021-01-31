@@ -13,20 +13,17 @@
 #     language: python
 #     name: python3
 # ---
-
 # %% [markdown]
 # # Analysis of simulation results
 #
 # In the following, we analyze the simulation results of **Ferreira, Kris Johnson, David Simchi-Levi, and He Wang. “Online Network Revenue Management Using Thompson Sampling”**.
-
 # %%
 import warnings
 
-from plotnine import *
-import pandas as pd
 import numpy as np
-
+import pandas as pd
 from dynpric.notebook import project_root_dir
+from plotnine import *
 
 warnings.filterwarnings("ignore")
 

@@ -12,25 +12,21 @@
 #     language: python
 #     name: python3
 # ---
-
 # %% [markdown]
 # # Demand Functions
-
 # %% [markdown]
 # ## Demand as a Poisson process
 #
 # For every time $t$, demand is drawn from a Poisson distribution with intensity $\lambda(p)$. As denoted, $\lambda$ depends on price and is assumed to be decreasing, so that the higher the price in period t, the lower the expected demand will be.
 #
 # To visualize, such a demand function, let's plot 100-day period, where a firm sets $p = 30$ in the first 50 days and $p = 60$ during the final half.
-
 # %%
 # %matplotlib inline
-
 # %%
-import numpy as np
-import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 plt.style.use("seaborn-deep")
 

@@ -1,11 +1,14 @@
 # %%
 import random
-from math import exp, e, factorial, log
 from collections import namedtuple
+from math import e
+from math import exp
+from math import factorial
+from math import log
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 
 def mean_demand(p):

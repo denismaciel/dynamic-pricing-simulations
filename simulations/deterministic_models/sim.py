@@ -12,7 +12,6 @@
 #     language: python
 #     name: python3
 # ---
-
 # %% [markdown]
 # # Single product with limited inventory
 #
@@ -52,12 +51,10 @@
 # \begin{equation}
 #     J(t, d^*(t)) = \pi^*
 # \end{equation}
-
 # %% [markdown]
 # where $\pi^*$ is the Lagrange multiplier on the inventory constraint.
 #
 # $\pi^*$ can be interpreted as the **marginal opportunity cost of capacity**. For every inventory unit allocated to period $t$, there is an associated opportunity cost of capacity, which is the extra revenue that such a unit would generate if it were allocated to another period $t + x$. Ultimately, for an inventory allocation to be optimal, the marginal revenue must be equal across all periods. Suppose that is not the case for a specific allocation. In that case, the seller can always increase her revenue by moving one unit from a period with lower to a period with higher marginal revenue. It is also interesting to notice that the optimality condition states that the marginal revenue must equal the marginal opportunity cost of capacity. This is equivalent to the previous statement that marginal revenue must be equal across all time periods. The marginal opportunity cost of capacity of period $t$ is given by the marginal revenue the other periods.
-
 # %% [markdown]
 # ## A numerical example
 #
@@ -67,9 +64,9 @@
 # r_1 = p_1(-p_1 + 100)   \rightarrow p_1^* = 50, q_1^* = 50   \\
 # r_2 = p_2 (-2p_2 + 120) \rightarrow p_2^* = 30, q_2^* = 60
 # \end{equation}
-
 # %%
 import warnings
+
 from dynpric.notebook import project_root_dir
 
 FIGS_DIR = project_root_dir() / "figs"
@@ -171,7 +168,7 @@ Money = float
 class LinearDemand:
     """
     Demand function of the form: q(p) = a - b*p
-    
+
         Inverse demand:   p(q)  = (a - q)/b
         Marginal revenue: mr(q) = (a - 2q)/b
         Revenue:          r(q)  = p(q)*(q)

@@ -1,10 +1,9 @@
 #! env python
-import sys
 import os
-from pathlib import Path
-
+import sys
 from itertools import groupby
 from operator import attrgetter
+from pathlib import Path
 
 root = Path()
 
