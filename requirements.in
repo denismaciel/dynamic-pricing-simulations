@@ -1,3 +1,4 @@
+git+https://github.com/denismaciel/dynpric@main
 jupyterlab
 jupytext
 matplotlib
@@ -5,13 +6,13 @@ mkdocs
 mkdocs-material
 numpy
 pandas
-scipy
 plotnine
-git+https://github.com/denismaciel/dynpric@setup
+pyarrow
+scipy
 
 # Development
 black
 flake8
 mypy
-pytest
 pre-commit
+pytest
