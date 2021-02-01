@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-appdirs==1.4.4            # via black, ptpython, virtualenv
+appdirs==1.4.4            # via black, virtualenv
 argon2-cffi==20.1.0       # via notebook
 async-generator==1.10     # via nbclient
 attrs==20.3.0             # via jsonschema, markdown-it-py, pytest
@@ -21,6 +21,7 @@ decorator==4.4.2          # via ipython
 defusedxml==0.6.0         # via nbconvert
 descartes==1.1.0          # via plotnine
 distlib==0.3.1            # via virtualenv
+git+https://github.com/denismaciel/dynpric@setup  # via -r requirements.in
 entrypoints==0.3          # via nbconvert
 filelock==3.0.12          # via virtualenv
 flake8==3.8.4             # via -r requirements.in
@@ -30,8 +31,8 @@ idna==2.10                # via requests
 iniconfig==1.1.1          # via pytest
 ipykernel==5.3.4          # via notebook
 ipython-genutils==0.2.0   # via nbformat, notebook, traitlets
-ipython==7.19.0           # via ipykernel, ptipython
-jedi==0.17.2              # via ipython, ptpython
+ipython==7.19.0           # via ipykernel
+jedi==0.17.2              # via ipython
 jinja2==2.11.2            # via jupyterlab, jupyterlab-server, mkdocs, nbconvert, notebook
 joblib==0.17.0            # via nltk
 json5==0.9.5              # via jupyterlab-server
@@ -79,15 +80,13 @@ plotnine==0.7.1           # via -r requirements.in
 pluggy==0.13.1            # via pytest
 pre-commit==2.9.2         # via -r requirements.in
 prometheus-client==0.9.0  # via notebook
-prompt-toolkit==3.0.8     # via ipython, ptpython
-ptipython==1.0.1          # via -r requirements.in
-ptpython==3.0.7           # via ptipython
+prompt-toolkit==3.0.8     # via ipython
 ptyprocess==0.6.0         # via pexpect, terminado
 py==1.9.0                 # via pytest
 pycodestyle==2.6.0        # via flake8
 pycparser==2.20           # via cffi
 pyflakes==2.2.0           # via flake8
-pygments==2.7.2           # via ipython, jupyterlab-pygments, mkdocs-material, nbconvert, ptpython
+pygments==2.7.2           # via ipython, jupyterlab-pygments, mkdocs-material, nbconvert
 pymdown-extensions==8.0.1  # via mkdocs-material
 pyparsing==2.4.7          # via matplotlib, packaging
 pyrsistent==0.17.3        # via jsonschema

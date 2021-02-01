@@ -294,8 +294,8 @@ class BernoulliMarket(Market):
 # At the end of each period, we record the price, revenue and the belief about the underlying demand of the selller for later analysis.
 
 # %%
-N_TRIALS = 500
-N_PERIODS = 500
+N_TRIALS = 50
+N_PERIODS = 50
 alpha = 0.25
 INVENTORY = alpha * N_PERIODS
 

@@ -65,11 +65,12 @@
 # r_2 = p_2 (-2p_2 + 120) \rightarrow p_2^* = 30, q_2^* = 60
 # \end{equation}
 # %%
+import os
 import warnings
+from pathlib import Path
 
-from dynpric.notebook import project_root_dir
 
-FIGS_DIR = project_root_dir() / "figs"
+FIGS_DIR = Path(os.environ["FIGS_DIR"])
 warnings.filterwarnings("ignore")
 
 # %%

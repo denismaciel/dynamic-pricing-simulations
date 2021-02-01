@@ -15,7 +15,9 @@
 #     name: python3
 # ---
 # %%
+import os
 import warnings
+from pathlib import Path
 
 warnings.filterwarnings("ignore")
 
@@ -25,11 +27,9 @@ import pandas as pd
 from plotnine import *
 import matplotlib.pyplot as plt
 
-from dynpric.notebook import project_root_dir
-
 # %%
 theme_set(theme_light())
-FIGS_DIR = project_root_dir() / "figs"
+FIGS_DIR = Path(os.environ["FIGS_DIR"])
 
 
 # %%

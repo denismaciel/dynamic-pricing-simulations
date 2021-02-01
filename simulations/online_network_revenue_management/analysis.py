@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # ---
 # jupyter:
-#   jupytext:
+#   jupyteft:
 #     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.5.0
+#       jupytext_version: 1.7.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -18,19 +18,19 @@
 #
 # In the following, we analyze the simulation results of **Ferreira, Kris Johnson, David Simchi-Levi, and He Wang. “Online Network Revenue Management Using Thompson Sampling”**.
 # %%
+import os
 import warnings
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from dynpric.notebook import project_root_dir
 from plotnine import *
 
 warnings.filterwarnings("ignore")
 
-N_TRIALS = 500
-N_PERIODS = 500
-FIGS_DIR = project_root_dir() / "figs"
-
+N_TRIALS = 50
+N_PERIODS = 50
+FIGS_DIR = Path(os.environ["FIGS_DIR"])
 
 # Read in simulation data
 ts_fixed = pd.read_parquet(

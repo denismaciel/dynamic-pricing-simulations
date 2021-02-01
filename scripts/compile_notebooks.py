@@ -1,11 +1,12 @@
 #! env python
-import os
+import shutil
+import subprocess
 import sys
 from itertools import groupby
 from operator import attrgetter
 from pathlib import Path
 
-root = Path()
+ROOT = Path()
 
 # def sync_notebooks():
 #     targets = (home / "simulations").rglob("nb_*")
@@ -51,12 +52,36 @@ notebooks = [
 ]
 
 
-def make_markdown(path, execute=False):
+def center_text(text: str, sep="=") -> str:
+    width, height = shutil.get_terminal_size()
+    return f"   {text}   ".center(width, sep)
+
+
+def nb_from_py(path: str) -> str:
+    path = Path(f"{path}.py")
+
+    if not path.exists():
+        raise FileNotFoundError(f"Python file does not exist: {path}")
+
+    proc = subprocess.run(
+        f"jupytext --to ipynb {path}",
+        capture_output=True,
+        text=True,
+        shell=True,
+    )
+
+    if proc.returncode != 0:
+        raise Exception(proc.sterr)
+
+    return proc.stdout
+
+
+def make_markdown(path, *, execute=False):
     notebook_path = Path(path + ".ipynb").absolute()
     if not notebook_path.exists():
         raise FileNotFoundError(f"Notebook {path} does not exist")
     parent = notebook_path.absolute().parent.stem
-    output_dir = root.absolute() / "docs" / "notebooks" / parent
+    output_dir = ROOT.absolute() / "docs" / "notebooks" / parent
     execute = "--execute" if execute else ""
     cmd = f"""
     jupyter nbconvert \
@@ -66,9 +91,29 @@ def make_markdown(path, execute=False):
         --to markdown {notebook_path} \
     """
 
-    # print(cmd)
-    os.system(cmd)
+    proc = subprocess.run(cmd, capture_output=True, text=True, shell=True,)
+
+    if proc.returncode != 0:
+        raise Exception(proc.stderr)
+
+    return proc.stdout
 
 
-for n in notebooks:
-    make_markdown(n, execute=True)
+def main() -> int:
+
+    for path in notebooks:
+        print(center_text(f"Processing {path}"))
+        print(center_text("py ===> ipynb", sep="-"))
+        result = nb_from_py(path)
+        print(center_text("ipynb ===> md", sep="-"))
+        make_markdown(path, execute=True)
+
+    return 0
+
+
+# for n in notebooks:
+#     make_markdown(n, execute=True)
+
+
+if __name__ == "__main__":
+    main()
