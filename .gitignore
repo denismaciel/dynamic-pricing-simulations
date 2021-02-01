@@ -1,6 +1,5 @@
 *.ipynb
 docs/notebooks
-figs
 .vim
 .python-version
 
