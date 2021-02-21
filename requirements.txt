@@ -4,6 +4,8 @@
 #
 #    pip-compile
 #
+anyio==2.1.0
+    # via jupyter-server
 appdirs==1.4.4
     # via
     #   black
@@ -17,19 +19,21 @@ attrs==20.3.0
     #   jsonschema
     #   markdown-it-py
     #   pytest
+babel==2.9.0
+    # via jupyterlab-server
 backcall==0.2.0
     # via ipython
 black==20.8b1
     # via -r requirements.in
-bleach==3.2.1
+bleach==3.3.0
     # via nbconvert
-certifi==2020.11.8
+certifi==2020.12.5
     # via requests
-cffi==1.14.4
+cffi==1.14.5
     # via argon2-cffi
 cfgv==3.2.0
     # via pre-commit
-chardet==3.0.4
+chardet==4.0.0
     # via requests
 click==7.1.2
     # via
@@ -56,56 +60,72 @@ flake8==3.8.4
     # via -r requirements.in
 future==0.18.2
     # via lunr
-identify==1.5.10
+identify==1.5.14
     # via pre-commit
 idna==2.10
-    # via requests
+    # via
+    #   anyio
+    #   requests
 iniconfig==1.1.1
     # via pytest
-ipykernel==5.3.4
+ipykernel==5.5.0
     # via notebook
 ipython-genutils==0.2.0
     # via
+    #   jupyter-server
     #   nbformat
     #   notebook
     #   traitlets
-ipython==7.19.0
-    # via ipykernel
-jedi==0.17.2
-    # via ipython
-jinja2==2.11.2
+ipython==7.20.0
     # via
+    #   ipykernel
+    #   jupyterlab
+jedi==0.18.0
+    # via ipython
+jinja2==2.11.3
+    # via
+    #   jupyter-server
     #   jupyterlab
     #   jupyterlab-server
     #   mkdocs
     #   nbconvert
     #   notebook
-joblib==0.17.0
-    # via nltk
+joblib==1.0.1
+    # via
+    #   nltk
+    #   scikit-learn
 json5==0.9.5
     # via jupyterlab-server
 jsonschema==3.2.0
     # via
     #   jupyterlab-server
     #   nbformat
-jupyter-client==6.1.7
+jupyter-client==6.1.11
     # via
     #   ipykernel
+    #   jupyter-server
     #   nbclient
     #   notebook
-jupyter-core==4.7.0
+jupyter-core==4.7.1
     # via
     #   jupyter-client
+    #   jupyter-server
+    #   jupyterlab
     #   nbconvert
     #   nbformat
     #   notebook
+jupyter-server==1.4.0
+    # via
+    #   jupyterlab
+    #   jupyterlab-server
+    #   nbclassic
 jupyterlab-pygments==0.1.2
     # via nbconvert
-jupyterlab-server==1.2.0
+jupyterlab-server==2.3.0
     # via jupyterlab
-jupyterlab==2.2.9
+jupyterlab==3.0.8
     # via -r requirements.in
-jupytext==1.7.1
+jupytext==1.10.2
     # via -r requirements.in
 kiwisolver==1.3.1
     # via matplotlib
@@ -113,8 +133,10 @@ livereload==2.6.3
     # via mkdocs
 lunr[languages]==0.5.8
     # via mkdocs
-markdown-it-py==0.5.6
-    # via jupytext
+markdown-it-py==0.6.2
+    # via
+    #   jupytext
+    #   mdit-py-plugins
 markdown==3.3.3
     # via
     #   mkdocs
@@ -122,7 +144,7 @@ markdown==3.3.3
     #   pymdown-extensions
 markupsafe==1.1.1
     # via jinja2
-matplotlib==3.3.3
+matplotlib==3.3.4
     # via
     #   -r requirements.in
     #   descartes
@@ -130,13 +152,15 @@ matplotlib==3.3.3
     #   plotnine
 mccabe==0.6.1
     # via flake8
+mdit-py-plugins==0.2.5
+    # via markdown-it-py
 mistune==0.8.4
     # via nbconvert
 mizani==0.7.2
     # via plotnine
 mkdocs-material-extensions==1.0.1
     # via mkdocs-material
-mkdocs-material==6.1.6
+mkdocs-material==6.2.8
     # via
     #   -r requirements.in
     #   mkdocs-material-extensions
@@ -148,46 +172,53 @@ mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-mypy==0.790
+mypy==0.812
     # via -r requirements.in
-nbclient==0.5.1
+nbclassic==0.2.6
+    # via jupyterlab
+nbclient==0.5.2
     # via nbconvert
 nbconvert==6.0.7
-    # via notebook
-nbformat==5.0.8
     # via
+    #   jupyter-server
+    #   notebook
+nbformat==5.1.2
+    # via
+    #   jupyter-server
     #   jupytext
     #   nbclient
     #   nbconvert
     #   notebook
-nest-asyncio==1.4.3
+nest-asyncio==1.5.1
     # via nbclient
 nltk==3.5
     # via lunr
 nodeenv==1.5.0
     # via pre-commit
-notebook==6.1.5
-    # via
-    #   jupyterlab
-    #   jupyterlab-server
-numpy==1.19.4
+notebook==6.2.0
+    # via nbclassic
+numpy==1.20.1
     # via
     #   -r requirements.in
+    #   dynpric
     #   matplotlib
     #   mizani
     #   pandas
     #   patsy
     #   plotnine
     #   pyarrow
+    #   scikit-learn
     #   scipy
     #   statsmodels
-packaging==20.7
+packaging==20.9
     # via
     #   bleach
+    #   jupyterlab
+    #   jupyterlab-server
     #   pytest
 palettable==3.3.0
     # via mizani
-pandas==1.1.4
+pandas==1.2.2
     # via
     #   -r requirements.in
     #   mizani
@@ -195,7 +226,7 @@ pandas==1.1.4
     #   statsmodels
 pandocfilters==1.4.3
     # via nbconvert
-parso==0.7.1
+parso==0.8.1
     # via jedi
 pathspec==0.8.1
     # via black
@@ -207,23 +238,25 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pillow==8.0.1
+pillow==8.1.0
     # via matplotlib
 plotnine==0.7.1
     # via -r requirements.in
 pluggy==0.13.1
     # via pytest
-pre-commit==2.9.2
+pre-commit==2.10.1
     # via -r requirements.in
 prometheus-client==0.9.0
-    # via notebook
-prompt-toolkit==3.0.8
+    # via
+    #   jupyter-server
+    #   notebook
+prompt-toolkit==3.0.16
     # via ipython
-ptyprocess==0.6.0
+ptyprocess==0.7.0
     # via
     #   pexpect
     #   terminado
-py==1.9.0
+py==1.10.0
     # via pytest
 pyarrow==3.0.0
     # via -r requirements.in
@@ -233,13 +266,13 @@ pycparser==2.20
     # via cffi
 pyflakes==2.2.0
     # via flake8
-pygments==2.7.2
+pygments==2.8.0
     # via
     #   ipython
     #   jupyterlab-pygments
     #   mkdocs-material
     #   nbconvert
-pymdown-extensions==8.0.1
+pymdown-extensions==8.1.1
     # via mkdocs-material
 pyparsing==2.4.7
     # via
@@ -247,37 +280,46 @@ pyparsing==2.4.7
     #   packaging
 pyrsistent==0.17.3
     # via jsonschema
-pytest==6.1.2
+pytest==6.2.2
     # via -r requirements.in
 python-dateutil==2.8.1
     # via
     #   jupyter-client
     #   matplotlib
     #   pandas
-pytz==2020.4
-    # via pandas
-pyyaml==5.3.1
+pytz==2021.1
+    # via
+    #   babel
+    #   pandas
+pyyaml==5.4.1
     # via
     #   jupytext
     #   mkdocs
     #   pre-commit
-pyzmq==20.0.0
+pyzmq==22.0.3
     # via
     #   jupyter-client
+    #   jupyter-server
     #   notebook
 regex==2020.11.13
     # via
     #   black
     #   nltk
-requests==2.25.0
+requests==2.25.1
     # via jupyterlab-server
-scipy==1.5.4
+scikit-learn==0.24.1
+    # via dynpric
+scipy==1.6.1
     # via
     #   -r requirements.in
+    #   dynpric
     #   plotnine
+    #   scikit-learn
     #   statsmodels
 send2trash==1.5.0
-    # via notebook
+    # via
+    #   jupyter-server
+    #   notebook
 six==1.15.0
     # via
     #   argon2-cffi
@@ -289,12 +331,18 @@ six==1.15.0
     #   patsy
     #   python-dateutil
     #   virtualenv
-statsmodels==0.12.1
+sniffio==1.2.0
+    # via anyio
+statsmodels==0.12.2
     # via plotnine
-terminado==0.9.1
-    # via notebook
+terminado==0.9.2
+    # via
+    #   jupyter-server
+    #   notebook
 testpath==0.4.4
     # via nbconvert
+threadpoolctl==2.1.0
+    # via scikit-learn
 toml==0.10.2
     # via
     #   black
@@ -305,12 +353,13 @@ tornado==6.1
     # via
     #   ipykernel
     #   jupyter-client
+    #   jupyter-server
     #   jupyterlab
     #   livereload
     #   mkdocs
     #   notebook
     #   terminado
-tqdm==4.54.0
+tqdm==4.57.0
     # via nltk
 traitlets==5.0.5
     # via
@@ -318,11 +367,12 @@ traitlets==5.0.5
     #   ipython
     #   jupyter-client
     #   jupyter-core
+    #   jupyter-server
     #   nbclient
     #   nbconvert
     #   nbformat
     #   notebook
-typed-ast==1.4.1
+typed-ast==1.4.2
     # via
     #   black
     #   mypy
@@ -330,9 +380,9 @@ typing-extensions==3.7.4.3
     # via
     #   black
     #   mypy
-urllib3==1.26.2
+urllib3==1.26.3
     # via requests
-virtualenv==20.2.1
+virtualenv==20.4.2
     # via pre-commit
 wcwidth==0.2.5
     # via prompt-toolkit
