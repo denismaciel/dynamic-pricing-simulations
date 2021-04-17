@@ -2,14 +2,15 @@
 
 Simulation-based comparison between dynamic pricing algorithms
 
-## Setup
+## How to render notebooks
 
-Define environment variables:
+Make sure all relevant notebooks are listed in `PATH` in`scripts/compile_notebooks.py`.
+
+Run:
 
 ```
-export FIGS_DIR=/home/denis/Personal/mt_bkp/dynamic-pricing-simulations
+FIGS_DIR=/home/denis/Personal/MasterThesis/dynamic-pricing-simulations/figs ./venv/bin/python3 scripts/compile_notebooks.py
 ```
-
-
-
-
+This will sync `.py` with `.ipynb` and render `.ipynb` as `.md`. All notebooks
+will have their content executed. To change that (why would you? Doesn't hurt to
+wait a little), toggle the `execute` variable in `main` function by hand.
