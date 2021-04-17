@@ -1,28 +1,23 @@
 # -*- coding: utf-8 -*-
-# %% [markdown]
 # # Online Network Revenue Management
-# %% [markdown]
 # Below is the implementation of the TS-Fixed algorithm described in **Ferreira, Kris Johnson, David Simchi-Levi, and He Wang. “Online Network Revenue Management Using Thompson Sampling”**
-# %% [markdown]
 # # Setup
 #
-# The setup consists of a seller of one good with limited stock and that can set one of four different prices during a selling season that lasts T periods. The available prices are 29.9, 34.9, 39.9, 44.9. Each price is associated with a demand that is entirely unknown to the seller at the beginning of the season. At each period, the demand can be either 0 or 1 unit. The seller can directly affect the probability that demand turns out to be one by setting the price.
-#
-# The correspondence between price and demand is the following:
+# The setup consists of a seller of one good with limited stock. The seller can set one of four prices during a selling season that lasts T periods. The prices are 29.9, 34.9, 39.9, 44.9. Each price is associated with a demand that is entirely unknown to the seller at the beginning of the season. At each period, the demand can be either 0 or 1 unit. The probability that demand is 1 is determined by the price:
 #
 # - When the price is 29.9, demand will be 1 with probability 0.8
 # - When the price is 34.9, demand will be 1 with probability 0.6
 # - When the price is 39.9, demand will be 1 with probability 0.3
 # - When the price is 44.9, demand will be 1 with probability 0.1
 #
-# As one would expect, the higher the price, the lower the expected value of the demand. As already mentioned, this correspondence is unknown to the seller at period t = 0. The way the seller learns about the demand is by setting different prices and observing the resulting demand.
+# As one would expect, the higher the price, the lower the expected value of demand. At t = 0, the relationship between price and demand is entirely unknown to the seller. The way she learns about it is by setting prices and observing the resulting demand.
 #
 # In what follows, we consider the seller to be Bayesian. The seller has the prior belief that the probability for every price is $Beta(1,1)$ distributed.  It is equivalent to a uniform distribution over the interval $[0,1]$. For every available price, the seller assumes that the corresponding probability is equally likely any number between 0 and 1. Thus, the seller beliefs do not incorporate even the commonsense that the higher the price, the lower the demand. According to seller's priors, it is as likely that the price 29.9 corresponds to a probability of 0.01 as the price 44.9 corresponds to a probability of 0.99.
 #
 # We will see later that, despite this rather unreasonable priors, the seller ends up learning the true demand parameters quite accurately.
 #
 # Now to the code. We start with the necessary imports.
-# %%
+# +
 import copy
 import random
 from typing import Any
@@ -44,7 +39,8 @@ from scipy.optimize import linprog
 from scipy.optimize.optimize import OptimizeResult
 
 
-# %% [markdown]
+# -
+
 # Next, we need to decide how to store the necessary information during the simulations.
 #
 # The prices and the true demand probabilities do not change during the simulation. For that reason, we store them in a named tuple called `PriceLevel`. `PriceLevel.true_prob` gives the probability that demand equals one when price is set to `PriceLevel.price`.
@@ -53,7 +49,7 @@ from scipy.optimize.optimize import OptimizeResult
 #
 # Also, at the beginning of every trial, the beliefs need to be reset to the priors $Beta(1,1)$. This is accomplished with the function `beliefs`.
 
-# %%
+# +
 class PriceLevel(NamedTuple):
     """
     Container of the information that characterizes the state of a price level
@@ -93,7 +89,8 @@ def beliefs() -> Beliefs:
     ]
 
 
-# %% [markdown]
+# -
+
 # ## Seller's optimization problem
 #
 # The process for the seller to determine which price to set comprises three steps:
@@ -104,7 +101,7 @@ def beliefs() -> Beliefs:
 #
 # **Demand estimation**. The first step is to pick a demand probability for each price in order to feed it to the optimization algorithm. This is done via Thompson sampling: the demand probability is sampled from the beta distribution associated with each price. The method `Belief.BetaPrior.sample` implements exactly that. An alternative to come up with the demand probability is to select the expected value of the beta distribution instead of sampling. This is the greedy approach and is exemplified by the function `greedy`.
 
-# %%
+# +
 def thompson(b: Belief) -> float:
     return b.prior.sample()  # type: ignore
 
@@ -113,7 +110,8 @@ def greedy(b: Belief) -> float:
     return b.prior.expected_value  # type: ignore
 
 
-# %% [markdown]
+# -
+
 # **Optimization**. Given the pairs of prices and demand probabilities, the seller now needs to solve an optimization problem. Ideally, she wants to maximize revenue, but she also must manage a limited inventory. The model specifies that the seller starts with a fixed amount of inventory and is not allowed to replenish it during the sales season. TS-fixed deals with the inventory constraint in a rather static way. During the optimization, we enforce that the resulting expected demand is smaller or equal to a constant $c$, which is the ratio between the inventory and the length of the selling season. $c$ is set at the beginning of the selling season and is **not** updated to reflect the actual development of the inventory. That is the reason why it bears "fixed" in its name.
 #
 # The optimization result is a vector $x = (x_1, x_2, x_3, x_4)$, the elements of which tell us the probability with which a price level should be chosen.
@@ -130,7 +128,6 @@ def greedy(b: Belief) -> float:
 #
 # <!-- The seller needs to be mindful not to exhaust the full inventory before exploiting the learnings from the exploration.   -->
 
-# %%
 def find_optimal_price(self, prices, demand) -> OptimizeResult:
     assert len(prices) == len(demand)
     # The reason for the minus sign is that scipy only does minimizations
@@ -168,7 +165,6 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
     return opt
 
 
-# %% [markdown]
 # The solution to the optimization problem of a clairvoyant seller (a seller that knows the actual underlying demand probabilities from the start) is shown below.
 #
 # We create the `ThrowAwayClass` because `find_optimal_price` is meant to be a method and takes an instance (usually denoted by `self` in Python) as its first argument.  To compute the optimal prices, we need the attribute `c` representing the ratio between the inventory and the periods in the selling season.
@@ -178,7 +174,7 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
 # - the longer the selling season becomes, the higher the optimal price and
 # - the larger the initial stock, the lower the optimal price.
 
-# %%
+# +
 class ThrowAwayClass0:
     c = 0.25
 
@@ -203,7 +199,8 @@ for p, prob in zip(price, opt_result.x):
     print(f"Choose price {p} with probability {round(prob,2)}")
 
 
-# %% [markdown]
+# -
+
 # ## Putting everything together
 #
 # We now have all the elements to construct the `TSFixedSeller` class.
@@ -223,7 +220,7 @@ for p, prob in zip(price, opt_result.x):
 #
 # Finally, the seller observes the realized demand (either 0 or 1) and updates her beliefs about the selected price in a Bayesian fashion.
 
-# %%
+# +
 class TSFixedSeller(Seller):
 
     _find_optimal_price = find_optimal_price
@@ -284,7 +281,8 @@ class BernoulliMarket(Market):
             raise ValueError(f"Price {p} is not an allowed price.")
 
 
-# %% [markdown]
+# -
+
 # ## Simulation
 #
 # ### Parameters
@@ -293,21 +291,19 @@ class BernoulliMarket(Market):
 #
 # At the end of each period, we record the price, revenue and the belief about the underlying demand of the selller for later analysis.
 
-# %%
-N_TRIALS = 50
-N_PERIODS = 50
+N_TRIALS = 500
+N_PERIODS = 500
 alpha = 0.25
 INVENTORY = alpha * N_PERIODS
 
 
-# %% [markdown]
 # ### TS-fixed
 #
 # Run the simulation for `TSFixerSeller`.
 #
 # Note that the trials might finish out of order. It happens because they are running in multiple processes in order to take advantage of all the CPU cores of the computer.
 
-# %%
+# +
 def initialize_trial() -> Tuple[Market, Seller]:
     return (
         BernoulliMarket(price_levels),
@@ -344,13 +340,13 @@ flatten_results(ts_fixed).to_parquet(
 )
 
 
-# %% [markdown]
+# -
+
 # ### Clairvoyant Seller
 
-# %% [markdown]
 # We simulate the same setting for a clairvoyant seller. In fact, we can even reuse all of `TSFixedSeller` functionality only change the `choose_price` method by enforcing it to always return the optimal price mixture.
 
-# %%
+# +
 def sample_optimal_price(_):
     probs = [0, 0, 0.75, 0.25]
     prices = [29.9, 34.9, 39.9, 44.9]
