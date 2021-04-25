@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# +
 # # Online Network Revenue Management
 # Below is the implementation of the TS-Fixed algorithm described in **Ferreira, Kris Johnson, David Simchi-Levi, and He Wang. “Online Network Revenue Management Using Thompson Sampling”**
 # # Setup
@@ -28,13 +29,13 @@ from typing import NamedTuple
 from typing import Tuple
 
 import numpy as np
-from dynpric.market import Market
-from dynpric.market import Price
-from dynpric.market import Quantity
+from market import Market
+from market import Price
+from market import Quantity
 from dynpric.priors import BetaPrior
-from dynpric.seller import Seller
-from dynpric.simulation_engine import simulate
-from dynpric.simulation_engine import trial_factory
+from seller import Seller
+from simulation_engine import simulate
+from simulation_engine import trial_factory
 from scipy.optimize import linprog
 from scipy.optimize.optimize import OptimizeResult
 
@@ -333,7 +334,7 @@ ts_fixed = simulate(
     trial_runner=trial_factory(initialize_trial, record_state),
 )
 
-from dynpric.simulation_engine import flatten_results
+from simulation_engine import flatten_results
 
 flatten_results(ts_fixed).to_parquet(
     f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet"

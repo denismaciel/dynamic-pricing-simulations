@@ -28,8 +28,8 @@ from plotnine import *
 
 warnings.filterwarnings("ignore")
 
-N_TRIALS = 50
-N_PERIODS = 50
+N_TRIALS = 500
+N_PERIODS = 500
 FIGS_DIR = Path(os.environ["FIGS_DIR"])
 
 # Read in simulation data
