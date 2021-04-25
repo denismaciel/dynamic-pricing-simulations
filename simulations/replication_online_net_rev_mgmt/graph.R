@@ -1,11 +1,7 @@
 library(tidyverse)
 
 df <- list.files('data', pattern = '*.csv', full.names = TRUE) %>%
-  map(function(x) {
-    df <- read_csv(x)
-    df$experiment <- x
-    return(df)
-  }) %>%
+  map(function(x) read_csv(x) %>% mutate(experiment = x)) %>%
   bind_rows
 
 CLAIRVOYANT_REVENUE <- (0.75 * 0.3 * 39.9) + (0.25 * 0.1 * 44.9)
@@ -43,7 +39,7 @@ avg_revenue <- df %>%
 x_axis <-  tibble(labels = unique(avg_revenue$n_periods)) %>%
   mutate(breaks = log(labels))
 
-avg_revenue %>%
+plot <- avg_revenue %>%
   ggplot(aes(
     log(n_periods),
     as_pp_of_clairvoyant,
@@ -66,3 +62,5 @@ avg_revenue %>%
     panel.grid.minor.x = element_blank(),
     panel.grid.minor.y = element_blank(),
   )
+
+ggsave(fs::path('figs', 'replication_25.png'), plot)

@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import itertools
+import pathlib
+import pickle
 from multiprocessing import cpu_count
 from multiprocessing import Pool
 from typing import Any
@@ -9,16 +12,11 @@ from typing import NamedTuple
 import numpy as np
 from dynpric import simulate_market
 from dynpric.demand.ferreira2018 import BernoulliDemand
-from dynpric.demand.ferreira2018 import PoissonDemand
-from dynpric.demand.informs2017 import InformsDemand
 from dynpric.firms.ferreira2018 import SamplingStrategies
 from dynpric.firms.ferreira2018 import TSFixedFirm
 from dynpric.firms.ferreira2018 import TSIngoreInventoryFirm
 from dynpric.firms.ferreira2018 import TSUpdateFirm
-from dynpric.firms.informs2017 import GreedyFirm
-from dynpric.firms.random import RandomFirm
 from dynpric.priors import BetaPrior
-from dynpric.priors import GammaPrior
 from dynpric.types import Belief
 from dynpric.types import DemandRealized
 from dynpric.types import Firm
@@ -152,14 +150,7 @@ def run_sequential(fn, n_periods):
     return [fn(i, n_periods) for i in range(N_TRIALS)]
 
 
-if __name__ == '__main__':
-    import pickle
-    import itertools
-
-    class Config(NamedTuple):
-        trial_factory: Callable[[int], TrialResults]
-        n_periods: int
-
+class Factories:
     def ts_fixed_with_bernoulli(trial_id, n_periods):
         return tsfirm_with_bernoulli_demand(TSFixedFirm, trial_id, n_periods)
 
@@ -171,12 +162,20 @@ if __name__ == '__main__':
             TSIngoreInventoryFirm, trial_id, n_periods
         )
 
+
+def main():
+    ROOT_DIR = pathlib.Path()
+
+    class Config(NamedTuple):
+        trial_factory: Callable[[int], TrialResults]
+        n_periods: int
+
     factories = [
-        ts_fixed_with_bernoulli,
-        ts_update_with_bernoulli,
-        ts_ignore_inventory_with_bernoulli,
+        Factories.ts_fixed_with_bernoulli,
+        Factories.ts_update_with_bernoulli,
+        Factories.ts_ignore_inventory_with_bernoulli,
     ]
-    n_periods = [10_000]
+    n_periods = [100]
 
     configs = sorted(
         [
@@ -192,7 +191,9 @@ if __name__ == '__main__':
     def run_simulation(config: Config) -> None:
         results = run_parallel(config.trial_factory, config.n_periods)
         file_name = (
-            f'data/{config.trial_factory.__name__}_{config.n_periods}.pickle'
+            ROOT_DIR
+            / 'data'
+            / f'{config.trial_factory.__name__}_{config.n_periods}.pickle'
         )
         with open(file_name, 'wb') as f:
             pickle.dump(results, f)
@@ -200,3 +201,7 @@ if __name__ == '__main__':
     for config in configs:
         print('Running', config)
         run_simulation(config)
+
+
+if __name__ == '__main__':
+    main()

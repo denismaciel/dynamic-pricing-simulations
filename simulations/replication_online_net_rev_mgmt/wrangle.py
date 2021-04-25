@@ -5,6 +5,9 @@ import time
 
 import pandas as pd
 
+ROOT_DIR = pathlib.Path()
+DATA_DIR = ROOT_DIR / 'data'
+
 
 def process_log(log, id: int):
     values = []
@@ -32,19 +35,12 @@ def wrangle(path: pathlib.Path) -> None:
 
     df = pd.DataFrame(values)
 
-    df.to_csv(f'data/{name}.csv', index=False)
+    df.to_csv(DATA_DIR / f'{name}.csv', index=False)
     end = time.time()
 
     print(f'Ended {path}. Took {round(end - start)} seconds.')
 
 
 if __name__ == '__main__':
-    # SIMULATION_NAME = 'ts_fixed_with_bernoulli'
-    # SIMULATION_NAME = 'ts_update_with_bernoulli'
-    # SIMULATION_NAME = 'ts_ignore_inventory_with_bernoulli'
-
     with multiprocessing.Pool(processes=2) as pool:
-        pool.map(wrangle, pathlib.Path('data').glob('*.pickle'))
-
-    # for path in pathlib.Path('data').glob('*.pickle'):
-    #     wrangle(path)
+        pool.map(wrangle, DATA_DIR.glob('*.pickle'))
