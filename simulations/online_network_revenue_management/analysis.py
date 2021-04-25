@@ -26,18 +26,18 @@ import numpy as np
 import pandas as pd
 from plotnine import *
 
-warnings.filterwarnings("ignore")
+warnings.filterwarnings('ignore')
 
 N_TRIALS = 500
 N_PERIODS = 500
-FIGS_DIR = Path(os.environ["FIGS_DIR"])
+FIGS_DIR = Path(os.environ['FIGS_DIR'])
 
 # Read in simulation data
 ts_fixed = pd.read_parquet(
-    f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
+    f'data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )
 clairvoyant = pd.read_parquet(
-    f"data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
+    f'data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )
 
 # %% [markdown]
@@ -57,19 +57,19 @@ clairvoyant = pd.read_parquet(
 # In the first periods, the seller makes around half the revenue that a clairvoyant would make. It takes her around 150 periods (roughly 30% of the selling season) to achieve the revenue level of the clairvoyant. From then on, the revenue stabilizes and fluctuates around the 10 dollar mark.
 
 # %%
-revenue = ts_fixed.groupby("t").period_revenue.mean()
+revenue = ts_fixed.groupby('t').period_revenue.mean()
 clairvoyant_avg_revenue = clairvoyant.period_revenue.mean()
 
 revenue_over_time = (
     ggplot(aes(revenue.index, revenue))
     + geom_line()
     + lims(y=(0, 15))
-    + geom_hline(aes(yintercept=clairvoyant_avg_revenue), color="red")
-    + labs(y="Revenue", x="Periods")
+    + geom_hline(aes(yintercept=clairvoyant_avg_revenue), color='red')
+    + labs(y='Revenue', x='Periods')
 )
 
 revenue_over_time.save(
-    FIGS_DIR / "online_net_revenue_over_time.png", dpi=300, height=3, width=5
+    FIGS_DIR / 'online_net_revenue_over_time.png', dpi=300, height=3, width=5
 )
 revenue_over_time
 
@@ -81,24 +81,24 @@ revenue_over_time
 # Remeber that the optimal price strategy if the seller were clairvoyant is to offer 39.9 with probability 0.75 and 44.9 with probability 0.25. The TS-fixed strategy approaches the clairvoyant's as the selling season unravels. Around period 300, the average of TS-fixed is virtually the same as that of a clairvoyant seller.
 
 # %%
-counts_per_step = ts_fixed.groupby(["t", "price"]).size().reset_index(name="n")
-counts_per_step["pp"] = counts_per_step["n"] / N_TRIALS
+counts_per_step = ts_fixed.groupby(['t', 'price']).size().reset_index(name='n')
+counts_per_step['pp'] = counts_per_step['n'] / N_TRIALS
 
 pricing_strategy = (
-    ggplot(counts_per_step, aes("t", "pp", color="factor(price)"))
+    ggplot(counts_per_step, aes('t', 'pp', color='factor(price)'))
     + geom_line()
     + labs(
-        title="How often price x was offered in period t averaged across all trials",
-        y="%",
-        color="Price Levels",
+        title='How often price x was offered in period t averaged across all trials',
+        y='%',
+        color='Price Levels',
     )
     + lims(y=(0, 1))
-    + facet_wrap("price")
-    + theme(legend_position="none")
+    + facet_wrap('price')
+    + theme(legend_position='none')
 )
 
 pricing_strategy.save(
-    FIGS_DIR / "online_net_pricing_strategy_over_time.png",
+    FIGS_DIR / 'online_net_pricing_strategy_over_time.png',
     dpi=300,
     height=3.3,
     width=5,
@@ -128,26 +128,26 @@ pricing_strategy
 
 # %%
 df = (
-    ts_fixed[["t", "belief_29.9", "belief_34.9", "belief_39.9", "belief_44.9"]]
-    .groupby("t")
+    ts_fixed[['t', 'belief_29.9', 'belief_34.9', 'belief_39.9', 'belief_44.9']]
+    .groupby('t')
     .mean()
     .reset_index()
-    .melt(id_vars="t", var_name="price", value_name="pp")
+    .melt(id_vars='t', var_name='price', value_name='pp')
 )
 
 belief_development = (
-    ggplot(df, aes(x="t", y="pp", color="price"))
+    ggplot(df, aes(x='t', y='pp', color='price'))
     + geom_line()
-    + labs(y="Probability")
+    + labs(y='Probability')
     + lims(y=(0, 1))
-    + facet_wrap("price")
-    + theme(legend_position="none")
+    + facet_wrap('price')
+    + theme(legend_position='none')
 )
 
 belief_development.save(
-    FIGS_DIR / "online_net_beliefs_over_time.png", dpi=300, height=3.5, width=5
+    FIGS_DIR / 'online_net_beliefs_over_time.png', dpi=300, height=3.5, width=5
 )
 belief_development
 
 # %%
-df.query("t == 499")
+df.query('t == 499')

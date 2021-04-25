@@ -6,28 +6,28 @@ from pathlib import Path
 ROOT = Path()
 
 notebooks = [
-    "simulations/demand/nb_reservation_price_demand",
-    "simulations/dynamic_programming/nb_dynamic_programming",
-    "simulations/online_network_revenue_management/simulation",
-    "simulations/online_network_revenue_management/analysis",
-    "simulations/thompson_sampling/nb_thompson_vs_greedy",
-    "simulations/deterministic_models/sim",
+    'simulations/demand/nb_reservation_price_demand',
+    'simulations/dynamic_programming/nb_dynamic_programming',
+    'simulations/online_network_revenue_management/simulation',
+    'simulations/online_network_revenue_management/analysis',
+    'simulations/thompson_sampling/nb_thompson_vs_greedy',
+    'simulations/deterministic_models/sim',
 ]
 
 
-def center_text(text: str, sep="=") -> str:
+def center_text(text: str, sep='=') -> str:
     width, height = shutil.get_terminal_size()
-    return f"   {text}   ".center(width, sep)
+    return f'   {text}   '.center(width, sep)
 
 
 def nb_from_py(path: str) -> str:
-    _path = Path(f"{path}.py")
+    _path = Path(f'{path}.py')
 
     if not _path.exists():
-        raise FileNotFoundError(f"Python file does not exist: {path}")
+        raise FileNotFoundError(f'Python file does not exist: {path}')
 
     proc = subprocess.run(
-        f"jupytext --to ipynb {_path}",
+        f'jupytext --to ipynb {_path}',
         capture_output=True,
         text=True,
         shell=True,
@@ -40,22 +40,22 @@ def nb_from_py(path: str) -> str:
 
 
 def make_markdown(path, *, execute=False):
-    notebook_path = Path(path + ".ipynb").absolute()
+    notebook_path = Path(path + '.ipynb').absolute()
     if not notebook_path.exists():
-        raise FileNotFoundError(f"Notebook {path} does not exist")
+        raise FileNotFoundError(f'Notebook {path} does not exist')
     parent = notebook_path.absolute().parent.stem
-    output_dir = ROOT.absolute() / "docs" / "notebooks" / parent
-    execute = "--execute" if execute else ""
-    cmd = " ".join(
+    output_dir = ROOT.absolute() / 'docs' / 'notebooks' / parent
+    execute = '--execute' if execute else ''
+    cmd = ' '.join(
         (
-            "jupyter nbconvert",
-            f"{execute}",
-            "--ExecutePreprocessor.timeout=180",
-            f"--output-dir {output_dir}",
-            f"--to markdown {notebook_path}",
+            'jupyter nbconvert',
+            f'{execute}',
+            '--ExecutePreprocessor.timeout=180',
+            f'--output-dir {output_dir}',
+            f'--to markdown {notebook_path}',
         )
     )
-    print("\t Command: ", cmd)
+    print('\t Command: ', cmd)
 
     proc = subprocess.run(
         cmd,
@@ -73,15 +73,15 @@ def make_markdown(path, *, execute=False):
 def main() -> int:
 
     for path in notebooks:
-        print(center_text(f"Processing {path}"))
-        print("\t py ===> ipynb")
+        print(center_text(f'Processing {path}'))
+        print('\t py ===> ipynb')
         _ = nb_from_py(path)
-        print("\t ipynb ===> md")
+        print('\t ipynb ===> md')
         make_markdown(path, execute=True)
-        print("\n\n")
+        print('\n\n')
 
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

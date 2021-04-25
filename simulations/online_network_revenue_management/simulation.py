@@ -29,15 +29,15 @@ from typing import NamedTuple
 from typing import Tuple
 
 import numpy as np
+from dynpric.priors import BetaPrior
 from market import Market
 from market import Price
 from market import Quantity
-from dynpric.priors import BetaPrior
+from scipy.optimize import linprog
+from scipy.optimize.optimize import OptimizeResult
 from seller import Seller
 from simulation_engine import simulate
 from simulation_engine import trial_factory
-from scipy.optimize import linprog
-from scipy.optimize.optimize import OptimizeResult
 
 
 # -
@@ -129,6 +129,7 @@ def greedy(b: Belief) -> float:
 #
 # <!-- The seller needs to be mindful not to exhaust the full inventory before exploiting the learnings from the exploration.   -->
 
+
 def find_optimal_price(self, prices, demand) -> OptimizeResult:
     assert len(prices) == len(demand)
     # The reason for the minus sign is that scipy only does minimizations
@@ -140,14 +141,54 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
     c1 = [demand, self.c]
 
     # Sum of probabilities smaller equal one
-    c2 = [(1, 1, 1, 1,), 1]
+    c2 = [
+        (
+            1,
+            1,
+            1,
+            1,
+        ),
+        1,
+    ]
 
     # 3. Probability of picking a price must be or equal to greater than zero
     c3 = [
-        [(-1, 0, 0, 0,), 0],
-        [(0, -1, 0, 0,), 0],
-        [(0, 0, -1, 0,), 0],
-        [(0, 0, 0, -1,), 0],
+        [
+            (
+                -1,
+                0,
+                0,
+                0,
+            ),
+            0,
+        ],
+        [
+            (
+                0,
+                -1,
+                0,
+                0,
+            ),
+            0,
+        ],
+        [
+            (
+                0,
+                0,
+                -1,
+                0,
+            ),
+            0,
+        ],
+        [
+            (
+                0,
+                0,
+                0,
+                -1,
+            ),
+            0,
+        ],
     ]
 
     constraints = [c1, c2, *c3]
@@ -160,7 +201,7 @@ def find_optimal_price(self, prices, demand) -> OptimizeResult:
         rhs_ineq.append(rhs)
 
     opt = linprog(
-        c=objective, A_ub=lhs_ineq, b_ub=rhs_ineq, method="revised simplex"
+        c=objective, A_ub=lhs_ineq, b_ub=rhs_ineq, method='revised simplex'
     )
 
     return opt
@@ -189,15 +230,15 @@ price = [pl.price for pl in price_levels]
 
 
 opt_result = find_optimal_price(ThrowAwayClass0, price, demand)
-print("=== Low inventory to duration of selling season ratio ===")
+print('=== Low inventory to duration of selling season ratio ===')
 for p, prob in zip(price, opt_result.x):
-    print(f"Choose price {p} with probability {round(prob,2)}")
+    print(f'Choose price {p} with probability {round(prob,2)}')
 
 
 opt_result = find_optimal_price(ThrowAwayClass1, price, demand)
-print("\n\n=== High inventory to duration of selling season ratio ===")
+print('\n\n=== High inventory to duration of selling season ratio ===')
 for p, prob in zip(price, opt_result.x):
-    print(f"Choose price {p} with probability {round(prob,2)}")
+    print(f'Choose price {p} with probability {round(prob,2)}')
 
 
 # -
@@ -279,7 +320,7 @@ class BernoulliMarket(Market):
             if pl.price == p:
                 return self._simulate_buying_decision(pl)
         else:
-            raise ValueError(f"Price {p} is not an allowed price.")
+            raise ValueError(f'Price {p} is not an allowed price.')
 
 
 # -
@@ -308,7 +349,12 @@ INVENTORY = alpha * N_PERIODS
 def initialize_trial() -> Tuple[Market, Seller]:
     return (
         BernoulliMarket(price_levels),
-        TSFixedSeller(beliefs(), thompson, INVENTORY, N_PERIODS,),
+        TSFixedSeller(
+            beliefs(),
+            thompson,
+            INVENTORY,
+            N_PERIODS,
+        ),
     )
 
 
@@ -317,14 +363,14 @@ def record_state(
 ) -> Dict[str, Any]:
 
     beliefs = {
-        f"belief_{b.price}": b.prior.expected_value for b in seller.beliefs
+        f'belief_{b.price}': b.prior.expected_value for b in seller.beliefs
     }
     return {
-        "t": t,
-        "price": p,
-        "period_revenue": p * q,
+        't': t,
+        'price': p,
+        'period_revenue': p * q,
         **beliefs,
-        "price_mixture": seller.opt_result.x,
+        'price_mixture': seller.opt_result.x,
     }
 
 
@@ -337,7 +383,7 @@ ts_fixed = simulate(
 from simulation_engine import flatten_results
 
 flatten_results(ts_fixed).to_parquet(
-    f"data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
+    f'data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )
 
 
@@ -366,7 +412,12 @@ ClairvoyantSeller.opt_result = ThrowAway2()
 def clairvoyant_initialize_trial() -> Tuple[Market, Seller]:
     return (
         BernoulliMarket(price_levels),
-        ClairvoyantSeller(beliefs(), thompson, INVENTORY, N_PERIODS,),
+        ClairvoyantSeller(
+            beliefs(),
+            thompson,
+            INVENTORY,
+            N_PERIODS,
+        ),
     )
 
 
@@ -377,5 +428,5 @@ clairvoyant = simulate(
 )
 
 flatten_results(clairvoyant).to_parquet(
-    f"data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet"
+    f'data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )

@@ -42,10 +42,10 @@ def logger(
         or type(firm) is TSIngoreInventoryFirm
     ):
         return {
-            "inventory": firm.inventory,
-            "price": prices_set[firm],
-            "demand": demand[firm],
-            "revenue": prices_set[firm] * demand[firm],
+            'inventory': firm.inventory,
+            'price': prices_set[firm],
+            'demand': demand[firm],
+            'revenue': prices_set[firm] * demand[firm],
         }
     else:
         return
@@ -72,7 +72,7 @@ def clairvoyant_seller_with_bernoulli_demand(trial_id):
     )
 
     ts_update = TSFixedFirm(
-        "ts",
+        'ts',
         beliefs,
         SamplingStrategies.thompson,
         INVENTORY,
@@ -89,7 +89,7 @@ def clairvoyant_seller_with_bernoulli_demand(trial_id):
     )
 
     if trial_id % 2 == 0:
-        print(f"Running {trial_id}")
+        print(f'Running {trial_id}')
 
     return simulate_market(
         n_periods=N_PERIODS,
@@ -112,7 +112,7 @@ def tsfirm_with_bernoulli_demand(TSFirm, trial_id, n_periods):
     ]
 
     ts_fixed = TSFirm(
-        "ts-firm",
+        'ts-firm',
         beliefs,
         SamplingStrategies.thompson,
         INVENTORY,
@@ -129,7 +129,7 @@ def tsfirm_with_bernoulli_demand(TSFirm, trial_id, n_periods):
     )
 
     if trial_id % 15 == 0:
-        print(f"Running {trial_id}")
+        print(f'Running {trial_id}')
 
     return simulate_market(
         n_periods=N_PERIODS,
@@ -152,7 +152,7 @@ def run_sequential(fn, n_periods):
     return [fn(i, n_periods) for i in range(N_TRIALS)]
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import pickle
     import itertools
 
@@ -192,11 +192,11 @@ if __name__ == "__main__":
     def run_simulation(config: Config) -> None:
         results = run_parallel(config.trial_factory, config.n_periods)
         file_name = (
-            f"data/{config.trial_factory.__name__}_{config.n_periods}.pickle"
+            f'data/{config.trial_factory.__name__}_{config.n_periods}.pickle'
         )
-        with open(file_name, "wb") as f:
+        with open(file_name, 'wb') as f:
             pickle.dump(results, f)
 
     for config in configs:
-        print("Running", config)
+        print('Running', config)
         run_simulation(config)

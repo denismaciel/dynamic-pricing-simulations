@@ -38,7 +38,9 @@ def trial_factory(
     initializer: Callable[[], tuple[Market, Seller]],
     state_recorder: Callable[[int, Market, Seller, Price, Quantity], dict],
 ) -> Callable[[int, int], dict]:
-    return partial(run_trial, initializer=initializer, state_recorder=state_recorder)
+    return partial(
+        run_trial, initializer=initializer, state_recorder=state_recorder
+    )
 
 
 def simulate(S: int, T: int, trial_runner: Callable, execution_mode='parallel'):

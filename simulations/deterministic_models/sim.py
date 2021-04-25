@@ -70,8 +70,8 @@ import warnings
 from pathlib import Path
 
 
-FIGS_DIR = Path(os.environ["FIGS_DIR"])
-warnings.filterwarnings("ignore")
+FIGS_DIR = Path(os.environ['FIGS_DIR'])
+warnings.filterwarnings('ignore')
 
 # %%
 import numpy as np
@@ -100,42 +100,42 @@ J2 = lambda q: -q + 60
 # %%
 C = 40
 
-df = pd.DataFrame({"q1": np.arange(C + 1)})
-df["q2"] = C - df["q1"]
-df["revenue"] = df.apply(
-    lambda row: r1(p1(row["q1"])) + r2(p2(row["q2"])), axis=1
+df = pd.DataFrame({'q1': np.arange(C + 1)})
+df['q2'] = C - df['q1']
+df['revenue'] = df.apply(
+    lambda row: r1(p1(row['q1'])) + r2(p2(row['q2'])), axis=1
 )
-df["J1"] = J1(df["q1"])
-df["J2"] = J2(df["q2"])
+df['J1'] = J1(df['q1'])
+df['J2'] = J2(df['q2'])
 
 df[20:30]
 
 # %%
 # Scale down the revenue for better visualizations
-df["revenue"] = df["revenue"] / 10
-df["J1"] = df["J1"]
-df["J2"] = df["J2"]
+df['revenue'] = df['revenue'] / 10
+df['J1'] = df['J1']
+df['J2'] = df['J2']
 
 # %%
 # Find q1 that yields highest revenue
-boo = df["revenue"] == df["revenue"].max()
-q1_max = df[boo]["q1"]
+boo = df['revenue'] == df['revenue'].max()
+q1_max = df[boo]['q1']
 
 plot = (
-    ggplot(df, aes(x="q1", y="revenue"))
+    ggplot(df, aes(x='q1', y='revenue'))
     + geom_line()
-    + geom_line(aes(y="J1"))
-    + geom_line(aes(y="J2"))
+    + geom_line(aes(y='J1'))
+    + geom_line(aes(y='J2'))
     + annotate(
-        "text",
+        'text',
         x=(10, 10, 10),
         y=(90, 40, 235),
-        label=("Marginal Rev 1", "Marginal Rev 2", "Total Revenue"),
+        label=('Marginal Rev 1', 'Marginal Rev 2', 'Total Revenue'),
         size=8,
         angle=(-13, 6, 30),
     )
-    + geom_vline(xintercept=q1_max, color="red")
-    + labs(y="(Marginal) Revenue", x="Inventory allocated to period 1", size=8)
+    + geom_vline(xintercept=q1_max, color='red')
+    + labs(y='(Marginal) Revenue', x='Inventory allocated to period 1', size=8)
     + theme_light()
     + theme(
         axis_title_x=element_text(size=9),
@@ -145,7 +145,7 @@ plot = (
     )
 )
 plot.save(
-    FIGS_DIR / "two_period_marginal_revenue.png", dpi=300, height=3.5, width=4
+    FIGS_DIR / 'two_period_marginal_revenue.png', dpi=300, height=3.5, width=4
 )
 plot
 
@@ -203,8 +203,8 @@ class LinearDemand:
 
     def __repr__(self):
         return (
-            f"LinearDemand(a={self.a}, b={self.b}, q={self.q}) "
-            f"| Marginal Revenue: {self.marginal_revenue()}"
+            f'LinearDemand(a={self.a}, b={self.b}, q={self.q}) '
+            f'| Marginal Revenue: {self.marginal_revenue()}'
         )
 
 
@@ -233,18 +233,19 @@ plot = ggplot()
 for t in season:
     p = np.arange(1, 10)
     q = t.demand(p)
-    df = pd.DataFrame({"p": p, "q": q})
-    df = df[df["q"] >= 0]
-    plot += geom_line(df, aes(x="p", y="q"), alpha=0.5)
-plot += labs(x="Price", y="Quantity")
+    df = pd.DataFrame({'p': p, 'q': q})
+    df = df[df['q'] >= 0]
+    plot += geom_line(df, aes(x='p', y='q'), alpha=0.5)
+plot += labs(x='Price', y='Quantity')
 plot += theme_light()
 plot += theme(
-    axis_title_x=element_text(size=9), axis_title_y=element_text(size=9),
+    axis_title_x=element_text(size=9),
+    axis_title_y=element_text(size=9),
 )
 plot
 
 # Save plot
-plot.save(FIGS_DIR / "deterministic_demands.png", dpi=300, height=3, width=4)
+plot.save(FIGS_DIR / 'deterministic_demands.png', dpi=300, height=3, width=4)
 
 plot
 
@@ -285,11 +286,11 @@ print(remaining)
 final_allocation = pd.DataFrame(
     [
         {
-            "Period": t,
-            "Alpha": d.a,
-            "Beta": d.b,
-            "Marginal Revenue": round(d.marginal_revenue(), 2),
-            "Allocated Quantity": d.q,
+            'Period': t,
+            'Alpha': d.a,
+            'Beta': d.b,
+            'Marginal Revenue': round(d.marginal_revenue(), 2),
+            'Allocated Quantity': d.q,
         }
         for t, d in enumerate(season)
     ]
@@ -302,15 +303,15 @@ q = np.arange(1, 200)
 
 for d in season:
     revenue = d.revenue(q)
-    df = pd.DataFrame({"q": q, "revenue": revenue})
-    df = df[df["revenue"] > 0]
-    plot += geom_line(df, aes(x="q", y="revenue"), alpha=0.5)
+    df = pd.DataFrame({'q': q, 'revenue': revenue})
+    df = df[df['revenue'] > 0]
+    plot += geom_line(df, aes(x='q', y='revenue'), alpha=0.5)
 
-    allocated_q = pd.DataFrame({"q": [d.q], "revenue": [d.revenue()]})
-    plot += geom_point(allocated_q, aes(x="q", y="revenue"))
+    allocated_q = pd.DataFrame({'q': [d.q], 'revenue': [d.revenue()]})
+    plot += geom_point(allocated_q, aes(x='q', y='revenue'))
 
-plot += labs(x="Quantity", y="Revenue")
+plot += labs(x='Quantity', y='Revenue')
 plot += theme_light()
 
-plot.save(FIGS_DIR / "deterministic_revenue.png", dpi=300, height=3, width=4)
+plot.save(FIGS_DIR / 'deterministic_revenue.png', dpi=300, height=3, width=4)
 plot
