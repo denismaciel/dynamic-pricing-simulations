@@ -42,5 +42,11 @@ def wrangle(path: pathlib.Path) -> None:
 
 
 if __name__ == '__main__':
-    with multiprocessing.Pool(processes=2) as pool:
-        pool.map(wrangle, DATA_DIR.glob('*.pickle'))
+    # with multiprocessing.Pool(processes=2) as pool:
+    #     pool.map(wrangle, DATA_DIR.glob('*.pickle'))
+    csv_names = [csv.stem for csv in DATA_DIR.glob('*.csv')]
+    pickles = DATA_DIR.glob('*.pickle')
+    to_wrangle = [file for file in pickles if file.stem not in csv_names]
+    print(to_wrangle)
+    for file in to_wrangle:
+        wrangle(file)

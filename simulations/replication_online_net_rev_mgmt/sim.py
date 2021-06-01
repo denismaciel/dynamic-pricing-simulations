@@ -1,14 +1,22 @@
+"""
+HowTo:
+    * Run three simulation with 100, 500 and 1000 periods respectively:
+        python3 simulations/replication_online_net_rev_mgmt/sim.py simulate --n-periods 100,500,1000
+"""
 from __future__ import annotations
 
+import argparse
 import itertools
 import pathlib
 import pickle
+import sys
 from multiprocessing import cpu_count
 from multiprocessing import Pool
 from typing import Any
 from typing import Callable
 from typing import NamedTuple
 
+import click
 import numpy as np
 from dynpric import simulate_market
 from dynpric.demand.ferreira2018 import BernoulliDemand
@@ -25,9 +33,17 @@ from dynpric.types import PricesSet
 from dynpric.types import TrialResults
 
 
+ROOT_DIR = pathlib.Path()
 N_TRIALS = 500
+α = 0.25
+
+# === CLI Interface ===
+@click.group()
+def cli():
+    ...
 
 
+# === Simulation Code ===
 def logger(
     firm: Firm,
     prices_set: PricesSet,
@@ -49,8 +65,8 @@ def logger(
         return
 
 
+# Not used
 def clairvoyant_seller_with_bernoulli_demand(trial_id):
-    α = 0.25
     N_PERIODS = 1000
     INVENTORY = int(α * N_PERIODS)
 
@@ -98,7 +114,6 @@ def clairvoyant_seller_with_bernoulli_demand(trial_id):
 
 
 def tsfirm_with_bernoulli_demand(TSFirm, trial_id, n_periods):
-    α = 0.25
     N_PERIODS = n_periods
     INVENTORY = int(α * N_PERIODS)
 
@@ -163,20 +178,41 @@ class Factories:
         )
 
 
-def main():
-    ROOT_DIR = pathlib.Path()
+class Config(NamedTuple):
+    trial_factory: Callable[[int], TrialResults]
+    n_periods: int
 
-    class Config(NamedTuple):
-        trial_factory: Callable[[int], TrialResults]
-        n_periods: int
+    def __repr__(self):
+        return f'{type(self).__name__}({self.trial_factory.__name__}, {self.n_periods})'
 
+
+def run_simulation(config: Config) -> None:
+    def _output_file_name(config):
+        return (
+            ROOT_DIR
+            / 'data'
+            / f'{config.trial_factory.__name__}_{config.n_periods}_alpha{α}.pickle'
+        )
+
+    results = run_parallel(config.trial_factory, config.n_periods)
+    with open(_output_file_name(config), 'wb') as f:
+        pickle.dump(results, f)
+
+
+@cli.command()
+@click.option(
+    '--n-periods',
+    type=str,
+    help='Comma-separated number of periods for the trails. For example, 100,500,1000',
+)
+def simulate(n_periods):
     factories = [
         Factories.ts_fixed_with_bernoulli,
         Factories.ts_update_with_bernoulli,
         Factories.ts_ignore_inventory_with_bernoulli,
     ]
-    n_periods = [100]
 
+    n_periods = [int(x) for x in n_periods.split(',')]
     configs = sorted(
         [
             Config(trial_factory, n_periods)
@@ -186,17 +222,6 @@ def main():
         ],
         key=lambda config: config.n_periods,
     )
-    print(configs)
-
-    def run_simulation(config: Config) -> None:
-        results = run_parallel(config.trial_factory, config.n_periods)
-        file_name = (
-            ROOT_DIR
-            / 'data'
-            / f'{config.trial_factory.__name__}_{config.n_periods}.pickle'
-        )
-        with open(file_name, 'wb') as f:
-            pickle.dump(results, f)
 
     for config in configs:
         print('Running', config)
@@ -204,4 +229,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    cli()
