@@ -4,51 +4,53 @@
 #
 #    pip-compile
 #
-anyio==2.1.0
+anyio==3.1.0
     # via jupyter-server
 appdirs==1.4.4
     # via
     #   black
     #   virtualenv
 argon2-cffi==20.1.0
-    # via notebook
+    # via
+    #   jupyter-server
+    #   notebook
 async-generator==1.10
     # via nbclient
-attrs==20.3.0
+attrs==21.2.0
     # via
     #   jsonschema
     #   markdown-it-py
     #   pytest
-babel==2.9.0
+babel==2.9.1
     # via jupyterlab-server
 backcall==0.2.0
     # via ipython
-black==20.8b1
+black==21.5b2
     # via -r requirements.in
 bleach==3.3.0
     # via nbconvert
-certifi==2020.12.5
+certifi==2021.5.30
     # via requests
 cffi==1.14.5
     # via argon2-cffi
-cfgv==3.2.0
+cfgv==3.3.0
     # via pre-commit
 chardet==4.0.0
     # via requests
-click==7.1.2
+click==8.0.1
     # via
     #   black
     #   mkdocs
     #   nltk
 cycler==0.10.0
     # via matplotlib
-decorator==4.4.2
+decorator==5.0.9
     # via ipython
-defusedxml==0.6.0
+defusedxml==0.7.1
     # via nbconvert
 descartes==1.1.0
     # via plotnine
-distlib==0.3.1
+distlib==0.3.2
     # via virtualenv
 git+https://github.com/denismaciel/dynpric@main
     # via -r requirements.in
@@ -56,11 +58,11 @@ entrypoints==0.3
     # via nbconvert
 filelock==3.0.12
     # via virtualenv
-flake8==3.8.4
+flake8==3.9.2
     # via -r requirements.in
 future==0.18.2
     # via lunr
-identify==1.5.14
+identify==2.2.9
     # via pre-commit
 idna==2.10
     # via
@@ -68,7 +70,7 @@ idna==2.10
     #   requests
 iniconfig==1.1.1
     # via pytest
-ipykernel==5.5.0
+ipykernel==5.5.5
     # via notebook
 ipython-genutils==0.2.0
     # via
@@ -76,13 +78,13 @@ ipython-genutils==0.2.0
     #   nbformat
     #   notebook
     #   traitlets
-ipython==7.20.0
+ipython==7.24.1
     # via
     #   ipykernel
     #   jupyterlab
 jedi==0.18.0
     # via ipython
-jinja2==2.11.3
+jinja2==3.0.1
     # via
     #   jupyter-server
     #   jupyterlab
@@ -100,7 +102,7 @@ jsonschema==3.2.0
     # via
     #   jupyterlab-server
     #   nbformat
-jupyter-client==6.1.11
+jupyter-client==6.1.12
     # via
     #   ipykernel
     #   jupyter-server
@@ -114,18 +116,18 @@ jupyter-core==4.7.1
     #   nbconvert
     #   nbformat
     #   notebook
-jupyter-server==1.4.0
+jupyter-server==1.8.0
     # via
     #   jupyterlab
     #   jupyterlab-server
     #   nbclassic
 jupyterlab-pygments==0.1.2
     # via nbconvert
-jupyterlab-server==2.3.0
+jupyterlab-server==2.6.0
     # via jupyterlab
-jupyterlab==3.0.8
+jupyterlab==3.0.16
     # via -r requirements.in
-jupytext==1.10.2
+jupytext==1.11.2
     # via -r requirements.in
 kiwisolver==1.3.1
     # via matplotlib
@@ -133,18 +135,20 @@ livereload==2.6.3
     # via mkdocs
 lunr[languages]==0.5.8
     # via mkdocs
-markdown-it-py==0.6.2
+markdown-it-py[plugins]==1.1.0
     # via
     #   jupytext
     #   mdit-py-plugins
-markdown==3.3.3
+markdown==3.3.4
     # via
     #   mkdocs
     #   mkdocs-material
     #   pymdown-extensions
-markupsafe==1.1.1
+markupsafe==2.0.1
     # via jinja2
-matplotlib==3.3.4
+matplotlib-inline==0.1.2
+    # via ipython
+matplotlib==3.4.2
     # via
     #   -r requirements.in
     #   descartes
@@ -152,15 +156,15 @@ matplotlib==3.3.4
     #   plotnine
 mccabe==0.6.1
     # via flake8
-mdit-py-plugins==0.2.5
+mdit-py-plugins==0.2.8
     # via markdown-it-py
 mistune==0.8.4
     # via nbconvert
-mizani==0.7.2
+mizani==0.7.3
     # via plotnine
 mkdocs-material-extensions==1.0.1
     # via mkdocs-material
-mkdocs-material==6.2.8
+mkdocs-material==7.1.6
     # via
     #   -r requirements.in
     #   mkdocs-material-extensions
@@ -174,15 +178,15 @@ mypy-extensions==0.4.3
     #   mypy
 mypy==0.812
     # via -r requirements.in
-nbclassic==0.2.6
+nbclassic==0.3.1
     # via jupyterlab
-nbclient==0.5.2
+nbclient==0.5.3
     # via nbconvert
 nbconvert==6.0.7
     # via
     #   jupyter-server
     #   notebook
-nbformat==5.1.2
+nbformat==5.1.3
     # via
     #   jupyter-server
     #   jupytext
@@ -191,13 +195,13 @@ nbformat==5.1.2
     #   notebook
 nest-asyncio==1.5.1
     # via nbclient
-nltk==3.5
+nltk==3.6.2
     # via lunr
-nodeenv==1.5.0
+nodeenv==1.6.0
     # via pre-commit
-notebook==6.2.0
+notebook==6.4.0
     # via nbclassic
-numpy==1.20.1
+numpy==1.20.3
     # via
     #   -r requirements.in
     #   dynpric
@@ -218,7 +222,7 @@ packaging==20.9
     #   pytest
 palettable==3.3.0
     # via mizani
-pandas==1.2.2
+pandas==1.2.4
     # via
     #   -r requirements.in
     #   mizani
@@ -226,7 +230,7 @@ pandas==1.2.2
     #   statsmodels
 pandocfilters==1.4.3
     # via nbconvert
-parso==0.8.1
+parso==0.8.2
     # via jedi
 pathspec==0.8.1
     # via black
@@ -238,19 +242,19 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pillow==8.1.0
+pillow==8.2.0
     # via matplotlib
-plotnine==0.7.1
+plotnine==0.8.0
     # via -r requirements.in
 pluggy==0.13.1
     # via pytest
-pre-commit==2.10.1
+pre-commit==2.13.0
     # via -r requirements.in
-prometheus-client==0.9.0
+prometheus-client==0.11.0
     # via
     #   jupyter-server
     #   notebook
-prompt-toolkit==3.0.16
+prompt-toolkit==3.0.18
     # via ipython
 ptyprocess==0.7.0
     # via
@@ -258,21 +262,21 @@ ptyprocess==0.7.0
     #   terminado
 py==1.10.0
     # via pytest
-pyarrow==3.0.0
+pyarrow==4.0.1
     # via -r requirements.in
-pycodestyle==2.6.0
+pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
     # via cffi
-pyflakes==2.2.0
+pyflakes==2.3.1
     # via flake8
-pygments==2.8.0
+pygments==2.9.0
     # via
     #   ipython
     #   jupyterlab-pygments
     #   mkdocs-material
     #   nbconvert
-pymdown-extensions==8.1.1
+pymdown-extensions==8.2
     # via mkdocs-material
 pyparsing==2.4.7
     # via
@@ -280,7 +284,7 @@ pyparsing==2.4.7
     #   packaging
 pyrsistent==0.17.3
     # via jsonschema
-pytest==6.2.2
+pytest==6.2.4
     # via -r requirements.in
 python-dateutil==2.8.1
     # via
@@ -296,20 +300,20 @@ pyyaml==5.4.1
     #   jupytext
     #   mkdocs
     #   pre-commit
-pyzmq==22.0.3
+pyzmq==22.1.0
     # via
     #   jupyter-client
     #   jupyter-server
     #   notebook
-regex==2020.11.13
+regex==2021.4.4
     # via
     #   black
     #   nltk
 requests==2.25.1
     # via jupyterlab-server
-scikit-learn==0.24.1
+scikit-learn==0.24.2
     # via dynpric
-scipy==1.6.1
+scipy==1.6.3
     # via
     #   -r requirements.in
     #   dynpric
@@ -320,7 +324,7 @@ send2trash==1.5.0
     # via
     #   jupyter-server
     #   notebook
-six==1.15.0
+six==1.16.0
     # via
     #   argon2-cffi
     #   bleach
@@ -335,11 +339,11 @@ sniffio==1.2.0
     # via anyio
 statsmodels==0.12.2
     # via plotnine
-terminado==0.9.2
+terminado==0.10.0
     # via
     #   jupyter-server
     #   notebook
-testpath==0.4.4
+testpath==0.5.0
     # via nbconvert
 threadpoolctl==2.1.0
     # via scikit-learn
@@ -359,7 +363,7 @@ tornado==6.1
     #   mkdocs
     #   notebook
     #   terminado
-tqdm==4.57.0
+tqdm==4.61.0
     # via nltk
 traitlets==5.0.5
     # via
@@ -368,26 +372,25 @@ traitlets==5.0.5
     #   jupyter-client
     #   jupyter-core
     #   jupyter-server
+    #   matplotlib-inline
     #   nbclient
     #   nbconvert
     #   nbformat
     #   notebook
-typed-ast==1.4.2
-    # via
-    #   black
-    #   mypy
-typing-extensions==3.7.4.3
-    # via
-    #   black
-    #   mypy
-urllib3==1.26.3
+typed-ast==1.4.3
+    # via mypy
+typing-extensions==3.10.0.0
+    # via mypy
+urllib3==1.26.5
     # via requests
-virtualenv==20.4.2
+virtualenv==20.4.7
     # via pre-commit
 wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
     # via bleach
+websocket-client==1.0.1
+    # via jupyter-server
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
