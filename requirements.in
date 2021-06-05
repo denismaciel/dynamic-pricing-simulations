@@ -1,3 +1,4 @@
+click
 git+https://github.com/denismaciel/dynpric@main
 jupyterlab
 jupytext
