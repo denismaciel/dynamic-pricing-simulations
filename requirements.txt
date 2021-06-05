@@ -39,6 +39,7 @@ chardet==4.0.0
     # via requests
 click==8.0.1
     # via
+    #   -r requirements.in
     #   black
     #   mkdocs
     #   nltk
