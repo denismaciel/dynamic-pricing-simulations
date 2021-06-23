@@ -7,10 +7,6 @@ from itertools import product
 from typing import Callable
 
 import pandas as pd
-from dynpric.market import Market
-from dynpric.market import Price
-from dynpric.market import Quantity
-from dynpric.seller import Seller
 
 
 def run_period(t, market, seller, record_state):
@@ -24,8 +20,8 @@ def run_trial(
     s,
     T,
     reporting_frequency,
-    initializer: Callable[[], tuple[Market, Seller]],
-    state_recorder: Callable[[int, Market, Seller, Price, Quantity], dict],
+    initializer,
+    state_recorder,
 ) -> dict:
     market, seller = initializer()
     periods = [run_period(t, market, seller, state_recorder) for t in range(T)]
@@ -35,8 +31,8 @@ def run_trial(
 
 
 def trial_factory(
-    initializer: Callable[[], tuple[Market, Seller]],
-    state_recorder: Callable[[int, Market, Seller, Price, Quantity], dict],
+    initializer,
+    state_recorder,
 ) -> Callable[[int, int], dict]:
     return partial(
         run_trial, initializer=initializer, state_recorder=state_recorder
