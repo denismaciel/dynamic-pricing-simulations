@@ -46,19 +46,19 @@ N_TRIALS = 500
 
 
 experiments = {
-    'ts_fixed_vs_egreedy': {
+    'tsfixed_vs_egreedy': {
         'firms': [
             {'name': 'εGreedy', 'type': 'εgreedy'},
             {'name': 'TsFixed', 'type': 'ts_fixed'},
         ]
     },
-    'ts_fixed_vs_itself': {
+    'tsfixed_vs_tsfixed': {
         'firms': [
             {'name': 'TsFixedA', 'type': 'ts_fixed'},
             {'name': 'TsFixedB', 'type': 'ts_fixed'},
         ]
     },
-    'ts_fixed_vs_greedy': {
+    'tsfixed_vs_greedy': {
         'firms': [
             {'name': 'TsFixed', 'type': 'ts_fixed'},
             {'name': 'Greedy', 'type': 'greedy'},
@@ -78,7 +78,7 @@ experiments = {
             {'name': 'TsUpdate', 'type': 'ts_update'},
         ]
     },
-    'ts_update_vs_greedy': {
+    'tsupdate_vs_greedy': {
         'firms': [
             {'name': 'TsUpdate', 'type': 'ts_update'},
             {'name': 'Greedy', 'type': 'greedy'},
@@ -86,7 +86,7 @@ experiments = {
     },
 }
 
-EXPERIMENT_NAME = 'ts_update_vs_greedy'
+EXPERIMENT_NAME = 'tsupdate_vs_greedy'
 assert EXPERIMENT_NAME in experiments
 
 
