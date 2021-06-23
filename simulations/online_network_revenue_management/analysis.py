@@ -30,14 +30,15 @@ warnings.filterwarnings('ignore')
 
 N_TRIALS = 500
 N_PERIODS = 500
-FIGS_DIR = Path(os.environ['FIGS_DIR'])
+FIGS_DIR = Path('figs')
+DATA_FOLDER = Path(__file__).parent / 'data'
 
 # Read in simulation data
 ts_fixed = pd.read_parquet(
-    f'data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
+    DATA_FOLDER / f'ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )
 clairvoyant = pd.read_parquet(
-    f'data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
+    DATA_FOLDER / f'clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )
 
 # %% [markdown]

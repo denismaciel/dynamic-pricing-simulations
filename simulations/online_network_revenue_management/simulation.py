@@ -21,6 +21,7 @@
 # +
 import copy
 import random
+from pathlib import Path
 from typing import Any
 from typing import Dict
 from typing import Iterable
@@ -39,6 +40,8 @@ from seller import Seller
 from simulation_engine import simulate
 from simulation_engine import trial_factory
 
+
+DATA_FOLDER = Path(__file__).parent / 'data'
 
 # -
 
@@ -383,7 +386,7 @@ ts_fixed = simulate(
 from simulation_engine import flatten_results
 
 flatten_results(ts_fixed).to_parquet(
-    f'data/ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
+    DATA_FOLDER / f'ts_fixed_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )
 
 
@@ -428,5 +431,5 @@ clairvoyant = simulate(
 )
 
 flatten_results(clairvoyant).to_parquet(
-    f'data/clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
+    DATA_FOLDER / f'clairvoyant_trials{N_TRIALS}_periods{N_PERIODS}.parquet'
 )

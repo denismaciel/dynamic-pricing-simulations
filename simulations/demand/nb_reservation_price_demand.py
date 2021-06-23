@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 
 # %%
 theme_set(theme_light())
-FIGS_DIR = Path(os.environ['FIGS_DIR'])
+FIGS_DIR = Path('figs')
 
 
 # %%

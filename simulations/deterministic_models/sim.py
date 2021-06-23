@@ -70,7 +70,7 @@ import warnings
 from pathlib import Path
 
 
-FIGS_DIR = Path(os.environ['FIGS_DIR'])
+FIGS_DIR = Path('figs')
 warnings.filterwarnings('ignore')
 
 # %%
