@@ -93,4 +93,4 @@ plot <- avg_revenue %>%
   facet_wrap(~inventory)
 plot
 
-ggsave(fs::path('figs', 'replication.png'), plot, width = 9, height = 6)
+ggsave(fs::path('figs', 'replication.png'), plot, width = 12, height = 6)
