@@ -36,7 +36,10 @@ avg_revenue_per_period <- df %>%
   ) +
   theme(legend.position = 'bottom')
 
-ggsave(fs::path('figs', 'competition_avg_revenue_per_period.png'), avg_revenue_per_period)
+ggsave(fs::path('figs', 'competition_avg_revenue_per_period.png'),
+       avg_revenue_per_period,
+       width = 6,
+       height = 4)
 
 
 # Not used
@@ -54,13 +57,22 @@ revenue_per_price_combo <- df %>%
               names_sep = "_", 
               values_from = c(demand, price, revenue)) %>% 
   group_by(price_A = factor(price_A), price_B = factor(price_B)) %>% 
-  summarise(mean_revenue_A = mean(revenue_A)) %>%
+  summarise(mean_revenue_A = mean(revenue_A), mean_revenue_B = mean(revenue_B)) %>%
   ungroup() %>% 
-  mutate(mean_revenue_A = mean_revenue_A / mean(mean_revenue_A)) %>%
+  mutate(
+    mean_revenue_A = mean_revenue_A / mean(mean_revenue_A),
+    mean_revenue_B = mean_revenue_B / mean(mean_revenue_B),
+    both = paste(round(mean_revenue_B, 2), round(mean_revenue_A, 2), sep = ", ")
+  ) %>%
   ggplot(aes(price_A, price_B)) +
   geom_raster(aes(fill=mean_revenue_A)) +
-  geom_text(aes(price_A, price_B, label = round(mean_revenue_A, 3)), color="white") +
-  labs(x = "Price A", y = "Price B", fill = "Mean Revenue") +
-  theme_minimal()
+  geom_text(aes(price_A, price_B, label = both), color="white") +
+  labs(x = "Price A", y = "Price B", fill = "Firm A's Average Revenue") +
+  theme_minimal() +
+  theme(legend.position = 'bottom')
 
-ggsave(fs::path('figs', 'competition_revenue_per_price_combo.png'), revenue_per_price_combo)
+ggsave(fs::path('figs', 'competition_revenue_per_price_combo.png'),
+       revenue_per_price_combo,
+       width = 6,
+       height = 4)
+  
