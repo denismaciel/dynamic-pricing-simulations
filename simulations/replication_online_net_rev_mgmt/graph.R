@@ -1,7 +1,7 @@
 library(tidyverse)
 
 df <- list.files('data', pattern = '*.csv', full.names = TRUE) %>%
-  map(function(x) read_csv(x) %>% mutate(experiment = x)) %>%
+  map(function(x) read_csv(x) %>% mutate(experiment = x, price = as.numeric(price))) %>%
   bind_rows
 
 CLAIRVOYANT_REVENUE_025 <- (0.75 * 0.3 * 39.9) + (0.25 * 0.1 * 44.9)

@@ -1,61 +1,112 @@
 # Dynamic Pricing Simulations
 
-Simulation-based comparison between dynamic pricing algorithms
+This repository contains the code used to create the simulations and plots in
+my master thesis "Demand Learning under Limited Inventory: a simulation-based
+study."
 
-## How to render notebooks
+## Requirements
 
-Make sure all relevant notebooks are listed in `PATH` in`scripts/compile_notebooks.py`.
+To reproduce the results, you must have Python 3.9 or greater and R 4.1.1 or greater installed on your system.
 
-Run:
+### Setting up Python
 
+```bash
+python3 -m venv venv
+./venv/bin/pip install -r requirements.txt
 ```
-FIGS_DIR=/home/denis/Personal/MasterThesis/dynamic-pricing-simulations/figs ./venv/bin/python3 scripts/compile_notebooks.py
+
+### Setting up R
+
+```bash
+R -e 'install.packages("tidyverse")'
 ```
-This will sync `.py` with `.ipynb` and render `.ipynb` as `.md`. All notebooks
-will have their content executed. To change that (why would you? Doesn't hurt to
-wait a little), toggle the `execute` variable in `main` function by hand.
+
+## Running the simulations and generating the plots
+
+Before start running the code, make sure you have the virtual environment activated and environment variables set by running:
+
+```bash
+export FIGS_DIR=/home/denis/Personal/MasterThesis/dynamic-pricing-simulations/figs
+source venv/bin/activate
+```
+
+### `deterministic_models`
+
+To reproduce Table 1, Table 2 and Figure 1:
+
+```bash
+python3 simulations/deterministic_models/sim.py
+```
 
 
 
-% This work is divided into sections. In the section
-% ``\nameref{sec:limited_inventory}'', we explore the scenario where a firm is not
-% able to reorder products when initial stock is sold out. By assuming the demand
-% function is fully known and non-stochastic, we discuss what is the optimal way
-% to price the product during the sales season. Next, in the section
-% ``\nameref{Sec:DemandAndLearning}'', we try to answer the questions: How should
-% a firm balance the need of learning the demand while at the same time optimizing
-% prices for revenue maximization? Should it explore different price points to
-% learn or should it set the price believed to be optimal? We discuss different
-% strategies a firm might adopt while setting prices and learning the demand. The
-% section ``\nameref{sec:learning_demand_under_limited_inventory}'' follows.
-% There, the combination of limited inventory and demand learning is discussed. We
-% implement the Thompson-sampling-based agents (TS-Fixed and TS-Update) described
-% in \cite{ferreira2018online}. We manage to replicate their numerical results in
-% the section ``\nameref{sec:replication}''. Finally, in the section
-% ``\nameref{sec:competition}'', we simulate the agents side by side in a market.
-% That way, the demand for an agent is affected by the price set by another agent.
-% The simulation results show that the edge that Thompson-sampling agents have in
-% a monopolistic scenario can be reduced significantly once a competitor is
-% present in the market.
+### `exploration_exploitation`
 
-To replicate the plots from Section \nameref{sec:limited_inventory}, run
-\texttt{simulations/deterministic\_models/sim.py}.
-\nameref{Sec:DemandAndLearning}
-\nameref{sec:learning_demand_under_limited_inventory}
-\nameref{sec:replication}
-\nameref{sec:competition}
+To reproduce Figure 2 and Figure 3:
 
-Figure \ref{fig:bayesian_updating2} simulations/exploration_exploitation/bayesian_updating.R  
+```bash
+Rscript simulations/exploration_exploitation/bayesian_updating.R
+```
 
-\begin{itemize}
-    \item Figure \ref{fig:deterministic_revenue} and Table
-        \ref{tab:10_period_demands}, 
-    \item Figure \ref{fig:deterministic_revenue} and Table \ref{tab:10_period_demands}
-\end{itemize}
+To reproduce Figure 4 and Figure 5:
 
-% deterministic_models
-% exploration_exploitation
-% online_network_revenue_management
-% replication_online_net_rev_mgmt
-% demand
-% competition
+```bash
+# Run simulations
+python3 simulations/exploration_exploitation/sim.py simulate
+
+# Transform pickle into CSV to be consumed by R.
+python3 simulations/exploration_exploitation/sim.py generate_csv
+
+# Generate plots
+Rscript simulations/exploration_exploitation/graphs.R
+```
+
+### `online_network_revenue_management`
+
+To reproduce Figure 6, Figure 7 and Figure 8:
+
+```bash
+# Run simulations
+python3 simulations/online_network_revenue_management/simulation.py
+
+# Generate plots
+python3 simulations/online_network_revenue_management/analysis.py
+```
+
+### `replication_online_net_rev_mgmt`
+
+To reproduce For Figure 9:
+
+```bash
+# Run simulation with different sales season lengths
+python3 simulations/replication_online_net_rev_mgmt/sim.py simulate --n-periods 100,500,1000
+
+# Generate CSVs
+python3 simulations/replication_online_net_rev_mgmt/wrangle.py
+
+# Generate plot
+Rscript simulations/replication_online_net_rev_mgmt/graph.R
+```
+
+### `demand`
+
+To reproduce Figure 11:
+
+```bash
+python3 simulations/demand/nb_reservation_price_demand.py
+```
+
+### `competition`
+
+To reproduce Figure 12 and Figure 13:
+
+```bash
+# Run simulations
+python3 -m simulations.competition.sim simulate
+
+# Generate CSVs
+python3 -m simulations.competition.sim generate_csv
+
+# Generate plots
+Rscript simulations/competition/analysis.R
+```

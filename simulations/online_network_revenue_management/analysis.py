@@ -67,6 +67,7 @@ revenue_over_time = (
     + lims(y=(0, 15))
     + geom_hline(aes(yintercept=clairvoyant_avg_revenue), color='red')
     + labs(y='Revenue', x='Periods')
+    + theme_light()
 )
 
 revenue_over_time.save(
@@ -89,12 +90,12 @@ pricing_strategy = (
     ggplot(counts_per_step, aes('t', 'pp', color='factor(price)'))
     + geom_line()
     + labs(
-        title='How often price x was offered in period t averaged across all trials',
         y='%',
         color='Price Levels',
     )
     + lims(y=(0, 1))
     + facet_wrap('price')
+    + theme_light()
     + theme(legend_position='none')
 )
 
@@ -141,7 +142,8 @@ belief_development = (
     + geom_line()
     + labs(y='Probability')
     + lims(y=(0, 1))
-    + facet_wrap('price')
+    + facet_wrap('price') 
+    + theme_light()
     + theme(legend_position='none')
 )
 
