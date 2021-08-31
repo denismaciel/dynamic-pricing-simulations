@@ -23,7 +23,9 @@ R -e 'install.packages("tidyverse")'
 
 ## Running the simulations and generating the plots
 
-Before start running the code, make sure you have the virtual environment activated and environment variables set by running:
+All the code is in the subdirectories of `simulations`. The directory structure mirrors the sections of the thesis.
+
+Before start running the code, make sure you have the virtual environment activated by running:
 
 ```bash
 source venv/bin/activate
