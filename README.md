@@ -26,7 +26,6 @@ R -e 'install.packages("tidyverse")'
 Before start running the code, make sure you have the virtual environment activated and environment variables set by running:
 
 ```bash
-export FIGS_DIR=/home/denis/Personal/MasterThesis/dynamic-pricing-simulations/figs
 source venv/bin/activate
 ```
 
@@ -37,8 +36,6 @@ To reproduce Table 1, Table 2 and Figure 1:
 ```bash
 python3 simulations/deterministic_models/sim.py
 ```
-
-
 
 ### `exploration_exploitation`
 
